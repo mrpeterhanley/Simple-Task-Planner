@@ -17,7 +17,6 @@
     />
 
     <link rel="stylesheet" href="styles.css" />
-
     <title>Task List Planner</title>
   </head>
 
@@ -33,8 +32,7 @@
             <div class="col-lg-8 col-md-6 col-sm-3 col-xs-1"></div>
             <div class="col"></div>
             <div class="col"></div>
-            <div class="col taskItem"><button type="button" class="btn btn-primary">+Task</button></div>
-            
+            <div class="col taskItem"><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addTaskModal">+Task</button></div>
           </li>
 
         
@@ -85,6 +83,45 @@
     </div>
 </div>
 
+<div class="modal fade" id="addTaskModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">New Task</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <form>
+                <div class="form-group">
+                  <label for="exampleFormControlInput1">Task Name</label>
+                  <input type="text" class="form-control" id="exampleFormControlInput1">
+                </div>
+                <div class="form-group">
+                  <textarea class="form-control" id="exampleFormControlInput2" placeholder="Task Description" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="exampleFormControlInput1">Assigned To</label>
+                    <input type="text" class="form-control" id="exampleFormControlInput1">
+                  </div>
+                  <div class="form-group">
+                    <label for="exampleFormControlInput1">Due Date</label>
+                    <input type="text" class="form-control" id="exampleFormControlInput1">
+                  </div>
+                  <div class="form-group">
+                    <label for="exampleFormControlInput1">Status</label>
+                    <input type="text" class="form-control" id="exampleFormControlInput1">
+                  </div>
+              </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary">OK</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
 
     <!-- Optional JavaScript -->
