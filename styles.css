@@ -5,6 +5,20 @@
   background-color: lightgreen;
 }
 
+.badge-warning {
+  background-color: paleturquoise;
+}
+
 .taskItem {
   text-align: center;
+}
+
+.btn-primary {
+  background-color: lightseagreen;
+  border: lightseagreen;
+}
+
+.btn-secondary {
+  background-color: lightslategrey;
+  border: lightslategray;
 }

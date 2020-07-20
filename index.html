@@ -20,19 +20,31 @@
 
     <title>Task List Planner</title>
   </head>
-  <body>
-    
-    <h1 class="text-center my-3">Task List Planner</h1>
 
+  <body class="bg-light">
+    <div class="container-fluid container-lg-1 container-md-3 container-sm-6 p-3 my-3">
+    <h1 class="text-center my-3">Task List Planner</h1>
+    
     <ul class="list-group">
 
-        <li class="list-group-item d-flex align-items-center bg-light">
-            <div class="col-1">
+        <li class="list-group-item d-flex align-items-center">
+            <div class="col">
             </div>
-            <div class="col-8"><h6>Task Name</h6></div>
-            <div class="col-1 taskItem"><h6>Assigned To</h6></div>
-            <div class="col-1 taskItem"><h6>Due Date</h6></div>
-            <div class="col-1 taskItem"><h6>Status</h6></div>
+            <div class="col-lg-8 col-md-6 col-sm-3 col-xs-1"></div>
+            <div class="col"></div>
+            <div class="col"></div>
+            <div class="col taskItem"><button type="button" class="btn btn-primary">+Task</button></div>
+            
+          </li>
+
+        
+
+        <li class="list-group-item d-flex align-items-center bg-light">
+            <div class="col taskItem"></div>
+            <div class="col-lg-8 col-md-6 col-sm-3 col-xs-1"><h6>Task Name</h6></div>
+            <div class="col taskItem"><h6>Assigned To</h6></div>
+            <div class="col taskItem"><h6>Due Date</h6></div>
+            <div class="col taskItem"><h6>Status</h6></div>
           </li>
 
     <li class="list-group-item d-flex align-items-center">
@@ -41,7 +53,7 @@
             type="checkbox"
           />
         </div>
-        <div class="col-8">Task One</div>
+        <div class="col-lg-8 col-md-6 col-sm-3 col-xs-1">Take dog for walk</div>
         <div class="col taskItem"><span class="badge badge-primary">Myself</span></div>
         <div class="col taskItem"><span class="badge badge-success">Today</span></div>
         <div class="col taskItem"><span class="badge badge-warning">In Progress</span></div>
@@ -52,7 +64,7 @@
                 type="checkbox"
               />
             </div>
-            <div class="col-8">Task Two</div>
+            <div class="col-lg-8 col-md-6 col-sm-3 col-xs-1">Design task list wireframe</div>
             <div class="col taskItem"><span class="badge badge-primary">Myself</span></div>
             <div class="col taskItem"><span class="badge badge-success">Today</span></div>
             <div class="col taskItem"><span class="badge badge-warning">In Progress</span></div>
@@ -63,7 +75,7 @@
                 type="checkbox"
               />
             </div>
-            <div class="col-8">Task Three</div>
+            <div class="col-lg-8 col-md-6 col-sm-3 col-xs-1">Make lunch</div>
             <div class="col taskItem"><span class="badge badge-primary">Myself</span></div>
             <div class="col taskItem"><span class="badge badge-success">Today</span></div>
             <div class="col taskItem
@@ -71,6 +83,7 @@
           </li>
       </ul>
     </div>
+</div>
 
 
 
