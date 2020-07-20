@@ -1,0 +1,10 @@
+.badge-primary {
+  background-color: lightpink;
+}
+.badge-success {
+  background-color: lightgreen;
+}
+
+.taskItem {
+  text-align: center;
+}
