@@ -21,108 +21,214 @@
   </head>
 
   <body class="bg-light">
-    <div class="container-fluid container-lg-1 container-md-3 container-sm-6 p-3 my-3">
-    <h1 class="text-center my-3">Task List Planner</h1>
-    
-    <ul class="list-group">
+    <div
+      class="container-fluid container-lg-1 container-md-3 container-sm-6 p-3 my-3 bg-white"
+    >
+      <h1 class="text-center my-3">Task List Planner</h1>
 
-        <li class="list-group-item d-flex align-items-center">
-            <div class="col">
-            </div>
-            <div class="col-lg-8 col-md-6 col-sm-3 col-xs-1"></div>
-            <div class="col"></div>
-            <div class="col"></div>
-            <div class="col taskItem"><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addTaskModal">+Task</button></div>
-          </li>
+      <div class="d-flex justify-content-center">
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addTaskModal">+ Task</button>
+      </div>
+      
+      <div class="table-responsive">
+        <table class="table">
 
-        
+          <!--Heading row-->`
+          <thead class="bg-light">
+            <tr>
+              <th scope="col"></th>
+              <th scope="col">Task Name</th>
+              <th scope="col">Assigned To</th>
+              <th scope="col">Due Date</th>
+              <th scope="col">Status</th>
+            </tr>
+          </thead>
 
-        <li class="list-group-item d-flex align-items-center bg-light">
-            <div class="col taskItem"></div>
-            <div class="col-lg-8 col-md-6 col-sm-3 col-xs-1"><h6>Task Name</h6></div>
-            <div class="col taskItem"><h6>Assigned To</h6></div>
-            <div class="col taskItem"><h6>Due Date</h6></div>
-            <div class="col taskItem"><h6>Status</h6></div>
-          </li>
-
-    <li class="list-group-item d-flex align-items-center">
-        <div class="col">
-          <input
-            type="checkbox"
-          />
-        </div>
-        <div class="col-lg-8 col-md-6 col-sm-3 col-xs-1">Take dog for walk</div>
-        <div class="col taskItem"><span class="badge badge-primary">Myself</span></div>
-        <div class="col taskItem"><span class="badge badge-success">Today</span></div>
-        <div class="col taskItem"><span class="badge badge-warning">In Progress</span></div>
-      </li>
-        <li class="list-group-item d-flex align-items-center">
-            <div class="col">
-              <input
-                type="checkbox"
-              />
-            </div>
-            <div class="col-lg-8 col-md-6 col-sm-3 col-xs-1">Design task list wireframe</div>
-            <div class="col taskItem"><span class="badge badge-primary">Myself</span></div>
-            <div class="col taskItem"><span class="badge badge-success">Today</span></div>
-            <div class="col taskItem"><span class="badge badge-warning">In Progress</span></div>
-          </li>
-          <li class="list-group-item d-flex align-items-center">
-            <div class="col">
-              <input
-                type="checkbox"
-              />
-            </div>
-            <div class="col-lg-8 col-md-6 col-sm-3 col-xs-1">Make lunch</div>
-            <div class="col taskItem"><span class="badge badge-primary">Myself</span></div>
-            <div class="col taskItem"><span class="badge badge-success">Today</span></div>
-            <div class="col taskItem
-            "><span class="badge badge-warning">In Progress</span></div>
-          </li>
-      </ul>
-    </div>
-</div>
-
-<div class="modal fade" id="addTaskModal" tabindex="-1" role="dialog">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">New Task</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-            <form>
-                <div class="form-group">
-                  <label for="exampleFormControlInput1">Task Name</label>
-                  <input type="text" class="form-control" id="exampleFormControlInput1">
-                </div>
-                <div class="form-group">
-                  <textarea class="form-control" id="exampleFormControlInput2" placeholder="Task Description" rows="3"></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="exampleFormControlInput1">Assigned To</label>
-                    <input type="text" class="form-control" id="exampleFormControlInput1">
-                  </div>
-                  <div class="form-group">
-                    <label for="exampleFormControlInput1">Due Date</label>
-                    <input type="text" class="form-control" id="exampleFormControlInput1">
-                  </div>
-                  <div class="form-group">
-                    <label for="exampleFormControlInput1">Status</label>
-                    <input type="text" class="form-control" id="exampleFormControlInput1">
-                  </div>
-              </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-          <button type="button" class="btn btn-primary">OK</button>
-        </div>
+          <!--Table content-->
+          <tbody>
+            <tr>
+              <td scope="col">
+                <input type="checkbox" />
+              </td>
+              <td scope="col">
+                <button
+                  class="btn btn-default dropdown-toggle"
+                  type="button"
+                  id="dropdownMenuButton"
+                  data-toggle="collapse"
+                  data-target="#taskDetails"
+                  aria-haspopup="true"
+                  aria-expanded="false"
+                >
+                  Take dog for walk
+                </button>
+                <div class="collapse" id="taskDetails">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
+              </td>
+              <td scope="col">
+                <span class="badge badge-primary">Myself</span>
+              </td>
+              <td scope="col">
+                <span class="badge badge-success">Today</span>
+              </td>
+              <td scope="col">
+                <span class="badge badge-warning">In Progress</span>
+              </td>
+            </tr>
+            <tr>
+              <td scope="col">
+                <input type="checkbox" />
+              </td>
+              <td scope="col">
+                <button
+                  class="btn btn-default dropdown-toggle"
+                  type="button"
+                  id="dropdownMenuButton"
+                  data-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="false"
+                >
+                  Take dog for walk
+                </button>
+              </td>
+              <td scope="col">
+                <span class="badge badge-primary">Myself</span>
+              </td>
+              <td scope="col">
+                <span class="badge badge-success">Today</span>
+              </td>
+              <td scope="col">
+                <span class="badge badge-warning">In Progress</span>
+              </td>
+            </tr>
+            <tr>
+              <td scope="col">
+                <input type="checkbox" />
+              </td>
+              <td scope="col">
+                <button
+                  class="btn btn-default dropdown-toggle"
+                  type="button"
+                  id="dropdownMenuButton"
+                  data-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="false"
+                >
+                  Take dog for walk
+                </button>
+              </td>
+              <td scope="col">
+                <span class="badge badge-primary">Myself</span>
+              </td>
+              <td scope="col">
+                <span class="badge badge-success">Today</span>
+              </td>
+              <td scope="col">
+                <span class="badge badge-warning">In Progress</span>
+              </td>
+            </tr>
+            <tr>
+              <td scope="col">
+                <input type="checkbox" />
+              </td>
+              <td scope="col">
+                <button
+                  class="btn btn-default dropdown-toggle"
+                  type="button"
+                  id="dropdownMenuButton"
+                  data-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="false"
+                >
+                  Take dog for walk
+                </button>
+              </td>
+              <td scope="col">
+                <span class="badge badge-primary">Myself</span>
+              </td>
+              <td scope="col">
+                <span class="badge badge-success">Today</span>
+              </td>
+              <td scope="col">
+                <span class="badge badge-warning">In Progress</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
 
+    <div class="modal fade" id="addTaskModal" tabindex="-1" role="dialog">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">New Task</h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="form-group">
+                <label for="exampleFormControlInput1">Task Name</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="exampleFormControlInput1"
+                />
+              </div>
+              <div class="form-group">
+                <textarea
+                  class="form-control"
+                  id="exampleFormControlInput2"
+                  placeholder="Task Description"
+                  rows="3"
+                ></textarea>
+              </div>
+              <div class="form-group">
+                <label for="exampleFormControlInput1">Assigned To</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="exampleFormControlInput1"
+                />
+              </div>
+              <div class="form-group">
+                <label for="exampleFormControlInput1">Due Date</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="exampleFormControlInput1"
+                />
+              </div>
+              <div class="form-group">
+                <label for="exampleFormControlInput1">Status</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="exampleFormControlInput1"
+                />
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal"
+            >
+              Cancel
+            </button>
+            <button type="button" class="btn btn-primary">OK</button>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
