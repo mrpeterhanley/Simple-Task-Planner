@@ -26,44 +26,63 @@
     >
       <h1 class="text-center my-3">Task List Planner</h1>
 
-      <div class="d-flex justify-content-end">
-        <button type="button" class="btn btn-primary mx-1" data-toggle="modal" data-target="#addTaskModal">+ Task</button>
-        <button type="button" class="btn btn-secondary mx-1" data-toggle="modal" data-target="#addAssigneeModal">+ Assignee</button>
+      <div class="d-flex justify-content-end mb-3">
+        <div>
+          <button type="button" class="btn btn-primary mx-1" data-toggle="modal" data-target="#addTaskModal">+ Task</button>
+        </div>
+        <div>
+          <button type="button" class="btn btn-danger mx-1">- Task</button>
+        </div>
+        <div class="dropdown">
+          <button class="btn btn-secondary dropdown-toggle mx-1" id="assigneeDropDown" data-toggle="dropdown">Assignee</span>
+          <div class="dropdown-menu" aria-labelledby="assigneeDropDown">
+            <a class="dropdown-item" data-toggle="modal" data-target="#addAssigneeModal">Add Assignee</a>
+            <a class="dropdown-item" href="#">Delete Assignee</a>
+          </div>
+        </div>
+        <div class="dropdown">
+          <button class="btn btn-secondary dropdown-toggle mx-1" id="filterDropDown" data-toggle="dropdown">Filter</span>
+          <div class="dropdown-menu" aria-labelledby="filterDropDown">
+            <a class="dropdown-item" href="#">By Assignee</a>
+            <a class="dropdown-item" href="#">By Due Date</a>
+            <a class="dropdown-item" href="#">By Status</a>
+          </div>
+        </div>
       </div>
       
       <div class="table-responsive">
-        <table class="table">
-
-          <!--Heading row-->`
+        <table class="table" id="taskPlannerTable">
+          <!--Heading row-->
           <thead class="bg-light">
             <tr>
               <th scope="col"></th>
               <th scope="col">Task Name</th>
-              <th scope="col">Assigned To</th>
+              <th scope="col">Assignee</th>
               <th scope="col">Due Date</th>
               <th scope="col">Status</th>
+              <th scope="col"></th>
             </tr>
           </thead>
 
           <!--Table content-->
           <tbody>
-            <tr>
+            <tr id="task1">
               <td scope="col">
                 <input type="checkbox" />
               </td>
               <td scope="col">
-                <div class="dropdown-toggle" data-toggle="collapse" data-target="#taskDetails">
+                <div class="dropdown-toggle" data-toggle="collapse" data-target="#task1Details">
                   Take dog for walk
                 </div>
-                <div class="collapse" id="taskDetails">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
+                
               </td>
               <td scope="col">
                 <div class="dropdown">
                   <span class="badge badge-primary dropdown-toggle" id="assigneeDropDown" data-toggle="dropdown">Myself</span>
                   <div class="dropdown-menu" aria-labelledby="assigneeDropDown">
                     <a class="dropdown-item" href="#">Myself</a>
-                    <a class="dropdown-item" href="#">Person B</a>
-                    <a class="dropdown-item" href="#">Person C</a>
+                    <a class="dropdown-item" href="#">Peter</a>
+                    <a class="dropdown-item" href="#">Catalina</a>
                   </div>
                 </div>
               </td>
@@ -81,96 +100,29 @@
                   </div>
                 </div>
               </td>
+              <td scope="col"><span class="badge badge-info">Edit</span></td>
             </tr>
-            <tr>
+            <tr class="collapse" id="task1Details">
+              <td scope="col"></td>
+              <td scope="col" colspan="5">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</td>
+            </tr>
+            <tr id="task2">
               <td scope="col">
                 <input type="checkbox" />
               </td>
               <td scope="col">
-                <div class="dropdown-toggle" data-toggle="collapse" data-target="#taskDetails2">
+                <div class="dropdown-toggle" data-toggle="collapse" data-target="#task2Details">
                   Take dog for walk
                 </div>
-                <div class="collapse" id="taskDetails2">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
-              </td>
-              </td>
-              <td scope="col">
-                <div class="dropdown">
-                  <span class="badge badge-primary dropdown-toggle" id="assigneeDropDown2" data-toggle="dropdown">Myself</span>
-                  <div class="dropdown-menu" aria-labelledby="assigneeDropDown2">
-                    <a class="dropdown-item" href="#">Myself</a>
-                    <a class="dropdown-item" href="#">Person B</a>
-                    <a class="dropdown-item" href="#">Person C</a>
-                  </div>
-                </div>
-              </td>
-              <td scope="col">
-                <span class="badge badge-success">Today</span>
-              </td>
-              <td scope="col">
-                <div class="dropdown">
-                  <span class="badge badge-secondary dropdown-toggle" id="statusDropDown2" data-toggle="dropdown">Not started</span>
-                  <div class="dropdown-menu">
-                    <span class="dropdown-item-text">Not started</span>
-                    <span class="dropdown-item-text">In progress</span>
-                    <span class="dropdown-item-text">Completed</span>
-                    <span class="dropdown-item-text">Overdue</span>
-                  </div>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td scope="col">
-                <input type="checkbox" />
-              </td>
-              <td scope="col">
-                <div class="dropdown-toggle" data-toggle="collapse" data-target="#taskDetails3">
-                  Take dog for walk
-                </div>
-                <div class="collapse" id="taskDetails3">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
-              </td>
-              <td scope="col">
-                <div class="dropdown">
-                  <span class="badge badge-primary dropdown-toggle" id="assigneeDropDown3" data-toggle="dropdown">Myself</span>
-                  <div class="dropdown-menu" aria-labelledby="assigneeDropDown3">
-                    <a class="dropdown-item" href="#">Myself</a>
-                    <a class="dropdown-item" href="#">Person B</a>
-                    <a class="dropdown-item" href="#">Person C</a>
-                  </div>
-                </div>
-              </td>
-              <td scope="col">
-                <span class="badge badge-success">Today</span>
-              </td>
-              <td scope="col">
-                <div class="dropdown">
-                  <span class="badge badge-secondary dropdown-toggle" id="statusDropDown3" data-toggle="dropdown">Not started</span>
-                  <div class="dropdown-menu">
-                    <span class="dropdown-item-text">Not started</span>
-                    <span class="dropdown-item-text">In progress</span>
-                    <span class="dropdown-item-text">Completed</span>
-                    <span class="dropdown-item-text">Overdue</span>
-                  </div>
-                </div>
-
-              </td>
-            </tr>
-            <tr>
-              <td scope="col">
-                <input type="checkbox" />
-              </td>
-              <td scope="col">
-                <div class="dropdown-toggle" data-toggle="collapse" data-target="#taskDetails4">
-                  Take dog for walk
-                </div>
-                <div class="collapse" id="taskDetails4">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
+                
               </td>
               <td scope="col">
                 <div class="dropdown">
                   <span class="badge badge-primary dropdown-toggle" id="assigneeDropDown" data-toggle="dropdown">Myself</span>
                   <div class="dropdown-menu" aria-labelledby="assigneeDropDown">
                     <a class="dropdown-item" href="#">Myself</a>
-                    <a class="dropdown-item" href="#">Person B</a>
-                    <a class="dropdown-item" href="#">Person C</a>
+                    <a class="dropdown-item" href="#">Peter</a>
+                    <a class="dropdown-item" href="#">Catalina</a>
                   </div>
                 </div>
               </td>
@@ -179,7 +131,7 @@
               </td>
               <td scope="col">
                 <div class="dropdown">
-                  <span class="badge badge-secondary dropdown-toggle" id="statusDropDown4" data-toggle="dropdown">Not started</span>
+                  <span class="badge badge-secondary dropdown-toggle" id="statusDropDown" data-toggle="dropdown">Not started</span>
                   <div class="dropdown-menu">
                     <span class="dropdown-item-text">Not started</span>
                     <span class="dropdown-item-text">In progress</span>
@@ -187,8 +139,53 @@
                     <span class="dropdown-item-text">Overdue</span>
                   </div>
                 </div>
-
               </td>
+              <td scope="col"><span class="badge badge-info">Edit</span></td>
+            </tr>
+            <tr class="collapse" id="task2Details">
+              <td scope="col"></td>
+              <td scope="col" colspan="5">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</td>
+            </tr>
+
+            <tr id="task3">
+              <td scope="col">
+                <input type="checkbox" />
+              </td>
+              <td scope="col">
+                <div class="dropdown-toggle" data-toggle="collapse" data-target="#task3Details">
+                  Take dog for walk
+                </div>
+                
+              </td>
+              <td scope="col">
+                <div class="dropdown">
+                  <span class="badge badge-primary dropdown-toggle" id="assigneeDropDown" data-toggle="dropdown">Myself</span>
+                  <div class="dropdown-menu" aria-labelledby="assigneeDropDown">
+                    <a class="dropdown-item" href="#">Myself</a>
+                    <a class="dropdown-item" href="#">Peter</a>
+                    <a class="dropdown-item" href="#">Catalina</a>
+                  </div>
+                </div>
+              </td>
+              <td scope="col">
+                <span class="badge badge-success">Today</span>
+              </td>
+              <td scope="col">
+                <div class="dropdown">
+                  <span class="badge badge-secondary dropdown-toggle" id="statusDropDown" data-toggle="dropdown">Not started</span>
+                  <div class="dropdown-menu">
+                    <span class="dropdown-item-text">Not started</span>
+                    <span class="dropdown-item-text">In progress</span>
+                    <span class="dropdown-item-text">Completed</span>
+                    <span class="dropdown-item-text">Overdue</span>
+                  </div>
+                </div>
+              </td>
+              <td scope="col"><span class="badge badge-info">Edit</span></td>
+            </tr>
+            <tr class="collapse" id="task3Details">
+              <td scope="col"></td>
+              <td scope="col" colspan="5">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</td>
             </tr>
           </tbody>
         </table>
@@ -213,44 +210,45 @@
           <div class="modal-body">
             <form>
               <div class="form-group">
-                <label for="exampleFormControlInput1">Task Name</label>
+                <label for="#taskNameInput">Task Name</label>
                 <input
                   type="text"
                   class="form-control"
-                  id="exampleFormControlInput1"
+                  id="taskNameInput"
                 />
               </div>
               <div class="form-group">
                 <textarea
                   class="form-control"
-                  id="exampleFormControlInput2"
+                  id="descriptionInput"
                   placeholder="Task Description"
                   rows="3"
                 ></textarea>
               </div>
               <div class="form-group">
-                <label for="exampleFormControlInput1">Assigned To</label>
+                <label for="#assigneeSelect">Assignee</label>
+                <select class="form-control" id="assigneeSelect">
+                  <option value="assignee1">Myself</option>
+                  <option value="assignee2">Peter</option>
+                  <option value="assignee3">Catalina</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="#dueDateInput">Due Date</label>
                 <input
-                  type="text"
+                  type="date"
                   class="form-control"
-                  id="exampleFormControlInput1"
+                  id="dueDateInput"
                 />
               </div>
               <div class="form-group">
-                <label for="exampleFormControlInput1">Due Date</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="exampleFormControlInput1"
-                />
-              </div>
-              <div class="form-group">
-                <label for="exampleFormControlInput1">Status</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="exampleFormControlInput1"
-                />
+                <label for="#statusSelect">Status</label>
+                <select class="form-control" id="statusSelect">
+                  <option value="notStarted">Not started</option>
+                  <option value="inProgress">In progress</option>
+                  <option value="completed">Completed</option>
+                  <option value="overdue">Overdue</option>
+                </select>
               </div>
             </form>
           </div>
@@ -262,47 +260,7 @@
             >
               Cancel
             </button>
-            <button type="button" class="btn btn-primary">OK</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="modal fade" id="addAssigneeModal" tabindex="-1" role="dialog">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">New Assignee</h5>
-            <button
-              type="button"
-              class="close"
-              data-dismiss="modal"
-              aria-label="Close"
-            >
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <form>
-              <div class="form-group">
-                <label for="exampleFormControlInput1">Assignee Name</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="exampleFormControlInput1"
-                />
-              </div>
-            </form>
-          </div>
-          <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-secondary"
-              data-dismiss="modal"
-            >
-              Cancel
-            </button>
-            <button type="button" class="btn btn-primary">OK</button>
+            <button type="button" class="btn btn-primary" id="addAssigneeButton">OK</button>
           </div>
         </div>
       </div>
@@ -325,5 +283,6 @@
       integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
       crossorigin="anonymous"
     ></script>
+    <script src="./script.js"></script>
   </body>
 </html>
