@@ -31,14 +31,13 @@ function buildTaskTable() {
   for (var i = 0; i < taskList.length; i++) {
     //create a new task row
     var newTaskRow = document.createElement("tr");
-    var taskID = taskList[i].taskid;
-    var taskDetailId = "detail" + taskList[i].taskid;
+    var taskID = taskList[i].taskid; // = "1"
+    var taskDetailId = "detail" + taskList[i].taskid; // = "detail1"
     newTaskRow.setAttribute("id", taskID);
 
     // create the checkbox column
     var col0 = document.createElement("td");
     col0.setAttribute("scope", "col");
-    col0.classList.add("checkBoxCol");
     var input = document.createElement("input");
     input.setAttribute("type", "checkbox");
     col0.appendChild(input);
@@ -49,7 +48,6 @@ function buildTaskTable() {
     // create the task name column
     var col1 = document.createElement("td");
     col1.setAttribute("scope", "col");
-    col1.classList.add("nameCol");
     col1.innerHTML = taskList[i].name;
 
     // add to the row
@@ -58,7 +56,6 @@ function buildTaskTable() {
     // create the task assignee column
     var col2 = document.createElement("td");
     col2.setAttribute("scope", "col");
-    col2.classList.add("assigneeCol");
 
     var col2span = document.createElement("span");
     col2span.classList.add("badge", "badge-secondary");
@@ -71,7 +68,6 @@ function buildTaskTable() {
     // create the due date column
     var col3 = document.createElement("td");
     col3.setAttribute("scope", "col");
-    col3.classList.add("dateCol");
 
     var col3span = document.createElement("span");
     col3span.classList.add("badge", "badge-secondary");
@@ -84,7 +80,6 @@ function buildTaskTable() {
     // create the task status column
     var col4 = document.createElement("td");
     col4.setAttribute("scope", "col");
-    col4.classList.add("statusCol");
 
     var col4span = document.createElement("span");
     col4span.classList.add("badge", "badge-secondary");
@@ -97,7 +92,6 @@ function buildTaskTable() {
     // create the edit button column
     var col5 = document.createElement("td");
     col5.setAttribute("scope", "col");
-    col5.classList.add("editCol");
 
     var col5span = document.createElement("span");
     col5span.classList.add(
@@ -141,10 +135,7 @@ function buildTaskTable() {
     var col7 = document.createElement("td");
     col7.setAttribute("scope", "col");
     col7.setAttribute("colspan", "5");
-    col7.classList.add("detailCol");
     col7.innerHTML = taskList[i].details;
-
-    console.log(taskDetailId);
 
     // add to the row
     newTaskDetailRow.appendChild(col7);
@@ -153,7 +144,7 @@ function buildTaskTable() {
   }
 }
 
-buildTaskTable();
+buildTaskTable(); // Build out the task table from the task list array
 
 // get the add task modal elements
 let modalButton = document.getElementById("addTaskModalButton");
