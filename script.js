@@ -154,22 +154,62 @@ let modalAssigneeInput = document.getElementById("assigneeSelect");
 let modalDateInput = document.getElementById("dueDateInput");
 let modalStatusInput = document.getElementById("statusSelect");
 
+// set the default value of the modal date input to today's date
+var dateobj = new Date();
+var date = dateobj.toDateString();
+modalDateInput.value.innerHTML = date;
+
+function checkIfValidName(event) {
+  if (event.target.value && event.target.value.length >= 8) {
+    event.target.classList.remove("is-invalid");
+    event.target.classList.add("is-valid");
+  } else {
+    event.target.classList.remove("is-valid");
+    event.target.classList.add("is-invalid");
+  }
+}
+
+function checkIfValidDesc(event) {
+  if (event.target.value && event.target.value.length >= 15) {
+    event.target.classList.remove("is-invalid");
+    event.target.classList.add("is-valid");
+  } else {
+    event.target.classList.remove("is-valid");
+    event.target.classList.add("is-invalid");
+  }
+}
+
+modalTaskNameInput.addEventListener("input", checkIfValidName);
+modalTaskDetailInput.addEventListener("input", checkIfValidDesc);
+
 // add a new task and refresh the task table when the modal is submitted
 modalButton.onclick = function () {
-  taskList.push(
-    createTask(
-      modalTaskNameInput.value,
-      modalTaskDetailInput.value,
-      modalAssigneeInput.value,
-      modalDateInput.value,
-      modalStatusInput.value
-    )
-  );
-  modalTaskNameInput.value = null;
-  modalTaskDetailInput.value = null;
-  modalAssigneeInput.value = null;
-  modalDateInput.value = null;
-  modalStatusInput.value = null;
+  modalButton.setAttribute("data-dismiss", "modal");
+  if (
+    modalTaskNameInput.value.length < 8 ||
+    modalTaskDetailInput.value.length < 15
+  ) {
+    modalButton.setAttribute("data-dismiss", "");
+  } else {
+    taskList.push(
+      createTask(
+        modalTaskNameInput.value,
+        modalTaskDetailInput.value,
+        modalAssigneeInput.value,
+        modalDateInput.value,
+        modalStatusInput.value
+      )
+    );
+    modalTaskNameInput.value = null;
+    modalTaskDetailInput.value = null;
+    modalAssigneeInput.value = "Myself";
+    modalStatusInput.value = "Not started";
 
-  buildTaskTable();
+    modalTaskNameInput.classList.toggle("is-valid");
+    modalTaskDetailInput.classList.toggle("is-valid");
+    modalTaskNameInput.classList.toggle("is-invalid");
+    modalTaskDetailInput.classList.toggle("is-invalid");
+
+    buildTaskTable();
+  }
 };
