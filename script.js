@@ -16,6 +16,25 @@ function createTask(taskName, taskDetails, taskAssignee, taskDate, taskStatus) {
   return task;
 }
 
+//create some sample tasks and add them to the task list array
+let task1 = createTask(
+  "Go to bank",
+  "Apply for new credit card",
+  "Peter",
+  "2020-08-01",
+  "Not started"
+);
+
+let task2 = createTask(
+  "Buy groceries",
+  "Milk, cheese, fruit, bread, vegetables",
+  "Catalina",
+  "2020-08-01",
+  "Not started"
+);
+
+taskList.push(task1, task2);
+
 // Cycle through the task list array and build the table body
 
 function buildTaskTable() {
