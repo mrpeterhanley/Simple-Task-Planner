@@ -170,7 +170,9 @@ buildTaskTable(); // Build out the task table from the task list array
 // get the add task modal elements
 let modalButton = document.getElementById("addTaskModalButton");
 let modalTaskNameInput = document.getElementById("taskNameInput");
+modalTaskNameInput.classList.add("is-invalid");
 let modalTaskDetailInput = document.getElementById("detailInput");
+modalTaskDetailInput.classList.add("is-invalid");
 let modalAssigneeInput = document.getElementById("assigneeSelect");
 let modalDateInput = document.getElementById("dueDateInput");
 let modalStatusInput = document.getElementById("statusSelect");
