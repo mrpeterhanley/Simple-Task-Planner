@@ -59,6 +59,8 @@ function buildTaskTable() {
     col0.setAttribute("scope", "col");
     var input = document.createElement("input");
     input.setAttribute("type", "checkbox");
+    input.setAttribute("data-id", taskID);
+    input.classList.add("checkbox");
     col0.appendChild(input);
 
     //add to the row
@@ -168,7 +170,9 @@ buildTaskTable(); // Build out the task table from the task list array
 // get the add task modal elements
 let modalButton = document.getElementById("addTaskModalButton");
 let modalTaskNameInput = document.getElementById("taskNameInput");
+modalTaskNameInput.classList.add("is-invalid");
 let modalTaskDetailInput = document.getElementById("detailInput");
+modalTaskDetailInput.classList.add("is-invalid");
 let modalAssigneeInput = document.getElementById("assigneeSelect");
 let modalDateInput = document.getElementById("dueDateInput");
 let modalStatusInput = document.getElementById("statusSelect");
@@ -232,3 +236,27 @@ modalButton.onclick = function () {
     buildTaskTable();
   }
 };
+
+deleteTaskObjectById = function (id) {
+  for (let i = 0; i < taskList.length; i++) {
+    if (id == taskList[i].taskid) {
+      taskList.splice(i, 1);
+    }
+  }
+};
+
+deleteButtonClick = function () {
+  let checkBoxList = document.getElementsByClassName("checkbox");
+
+  for (let i = 0; i < checkBoxList.length; i++) {
+    if (checkBoxList[i].checked == true) {
+      let id = checkBoxList[i].getAttribute("data-id");
+      deleteTaskObjectById(id);
+    }
+  }
+
+  buildTaskTable();
+};
+
+let deletebutton = document.querySelector("#deletebutton");
+deletebutton.addEventListener("click", deleteButtonClick);
