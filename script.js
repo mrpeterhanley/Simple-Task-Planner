@@ -210,10 +210,8 @@ let modalTaskDetailInput = document.getElementById("detailInput");
 modalTaskDetailInput.classList.add("is-invalid");
 let modalAssigneeInput = document.getElementById("assigneeSelect");
 let modalDateInput = document.getElementById("dueDateInput");
+modalDateInput.classList.add("is-invalid");
 let modalStatusInput = document.getElementById("statusSelect");
-
-// set the default value of the modal date input to today's date
-modalDateInput.value.innerHTML = date;
 
 function checkIfValidName(event) {
   if (event.target.value && event.target.value.length >= 8) {
@@ -235,15 +233,27 @@ function checkIfValidDesc(event) {
   }
 }
 
+function checkIfValidDate(event) {
+  if (event.target.value) {
+    event.target.classList.remove("is-invalid");
+    event.target.classList.add("is-valid");
+  } else {
+    event.target.classList.remove("is-valid");
+    event.target.classList.add("is-invalid");
+  }
+}
+
 modalTaskNameInput.addEventListener("input", checkIfValidName);
 modalTaskDetailInput.addEventListener("input", checkIfValidDesc);
+modalDateInput.addEventListener("input", checkIfValidDate);
 
 // add a new task and refresh the task table when the modal is submitted
 modalButton.onclick = function () {
   modalButton.setAttribute("data-dismiss", "modal");
   if (
     modalTaskNameInput.value.length < 8 ||
-    modalTaskDetailInput.value.length < 15
+    modalTaskDetailInput.value.length < 15 ||
+    modalDateInput.value === ""
   ) {
     modalButton.setAttribute("data-dismiss", "");
   } else {
@@ -259,12 +269,15 @@ modalButton.onclick = function () {
     modalTaskNameInput.value = null;
     modalTaskDetailInput.value = null;
     modalAssigneeInput.value = "Myself";
+    modalDateInput.value = null;
     modalStatusInput.value = "Not started";
 
     modalTaskNameInput.classList.toggle("is-valid");
     modalTaskDetailInput.classList.toggle("is-valid");
+    modalDateInput.classList.toggle("is-valid");
     modalTaskNameInput.classList.toggle("is-invalid");
     modalTaskDetailInput.classList.toggle("is-invalid");
+    modalDateInput.classList.toggle("is-invalid");
 
     buildTaskTable();
   }

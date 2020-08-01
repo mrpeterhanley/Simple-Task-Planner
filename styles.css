@@ -1,8 +1,12 @@
 h1 {
-  text-align: center;
-  margin: 30px;
   font-weight: 600;
   font-size: 50px;
+}
+
+h1,
+footer {
+  text-align: center;
+  margin: 30px;
   color: white;
 }
 
