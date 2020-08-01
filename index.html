@@ -16,22 +16,26 @@
       crossorigin="anonymous"
     />
 
-    <!-- <link rel="stylesheet" href="styles.css" /> -->
-    <title>Task List Planner</title>
+    <link rel="stylesheet" href="styles.css" />
+    <title>Simple Task Planner</title>
   </head>
 
-  <body class="bg-light">
+  <body>
+
+    <header><h1>Simple Task Planner</h1></header>
+    
+
     <div
-      class="container container-fluid container-lg-1 container-md-3 container-sm-6 p-3 my-3 bg-white border border-dark"
+      class="container container-fluid container-lg-1 container-md-3 container-sm-6 p-3 my-3 bg-white rounded"
     >
-      <h1 class="text-center my-3">Task List Planner</h1>
+      
 
       <div class="d-flex justify-content-center mb-3">
         <div>
-          <button type="button" class="btn btn-primary mx-1" data-toggle="modal" data-target="#addTaskModal">+ Task</button>
+          <button type="button" class="btn btn-success mx-1" data-toggle="modal" data-target="#addTaskModal">Add Task</button>
         </div>
         <div>
-          <button type="button" class="btn btn-danger mx-1" id="deletebutton">- Task</button>
+          <button type="button" class="btn btn-danger mx-1" id="deletebutton">Delete Task</button>
         </div>
         <div class="dropdown">
           <button class="btn btn-secondary dropdown-toggle mx-1" id="assigneeDropDown" data-toggle="dropdown">Assignee</span>
@@ -41,7 +45,7 @@
           </div>
         </div>
         <div class="dropdown">
-          <button class="btn btn-secondary dropdown-toggle mx-1" id="filterDropDown" data-toggle="dropdown">Filter</span>
+          <button class="btn btn-secondary dropdown-toggle mx-1" id="filterDropDown" data-toggle="dropdown">Order Tasks</span>
           <div class="dropdown-menu" aria-labelledby="filterDropDown">
             <a class="dropdown-item" href="#">By Assignee</a>
             <a class="dropdown-item" href="#">By Due Date</a>
@@ -65,7 +69,7 @@
           </thead>
 
           <!--Table content-->
-          <tbody id="taskTableBody">
+          <tbody class="accordion" id="taskTableBody">  
           
           </tbody>
         </table>
@@ -123,8 +127,9 @@
                   type="date"
                   class="form-control"
                   id="dueDateInput"
-                  value="2020-07-30"
                 />
+                <div class="valid-feedback">Looks good!</div>
+                <div class="invalid-feedback">Please select your task due date</div>
               </div>
               <div class="form-group">
                 <label for="#statusSelect">Status</label>
@@ -151,6 +156,7 @@
       </div>
     </div>
 
+    <footer>Built with &hearts; by Catalina Gomez & Peter Hanley</footer>
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script

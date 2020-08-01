@@ -1,6 +1,8 @@
 // Create the task list object array
 let taskList = [];
 let idCounter = 1;
+let dateobj = new Date();
+let date = dateobj.toDateString();
 
 // Make a function to create a new task object
 function createTask(taskName, taskDetails, taskAssignee, taskDate, taskStatus) {
@@ -21,7 +23,7 @@ let task1 = createTask(
   "Go to bank",
   "Apply for new credit card",
   "Peter",
-  "2020-08-01",
+  "2020-07-01",
   "Not started"
 );
 
@@ -91,8 +93,30 @@ function buildTaskTable() {
     col3.setAttribute("scope", "col");
 
     var col3span = document.createElement("span");
-    col3span.classList.add("badge", "badge-secondary");
+    col3span.classList.add("badge");
     col3span.innerHTML = taskList[i].duedate;
+
+    let taskDate = new Date(taskList[i].duedate);
+
+    if (
+      taskDate.getFullYear() == dateobj.getFullYear() &&
+      taskDate.getMonth() == dateobj.getMonth() &&
+      taskDate.getUTCDate() == dateobj.getUTCDate()
+    ) {
+      // task due today
+      col3span.classList.add("badge-warning");
+    } else if (taskDate.getTime() < dateobj.getTime()) {
+      // overdue at least 1 day
+      col3span.classList.add("badge-danger");
+
+      if (taskList[i].status == "Not started") {
+        // task is not completed or in progress, switch status to overdue
+        taskList[i].status = "Overdue";
+      }
+    } else {
+      col3span.classList.add("badge-secondary");
+    }
+
     col3.appendChild(col3span);
 
     // add to the row
@@ -103,8 +127,19 @@ function buildTaskTable() {
     col4.setAttribute("scope", "col");
 
     var col4span = document.createElement("span");
-    col4span.classList.add("badge", "badge-secondary");
+    col4span.classList.add("badge");
     col4span.innerHTML = taskList[i].status;
+
+    if (taskList[i].status == "In progress") {
+      col4span.classList.add("badge-warning");
+    } else if (taskList[i].status == "Completed") {
+      col4span.classList.add("badge-success");
+    } else if (taskList[i].status == "Overdue") {
+      col4span.classList.add("badge-danger");
+    } else {
+      col4span.classList.add("badge-secondary");
+    }
+
     col4.appendChild(col4span);
 
     // add to the row
@@ -144,6 +179,7 @@ function buildTaskTable() {
     newTaskDetailRow.setAttribute("id", taskDetailId);
     newTaskDetailRow.classList.add("bg-light");
     newTaskDetailRow.classList.add("collapse");
+    newTaskDetailRow.setAttribute("data-parent", "#taskTableBody");
 
     // create the blank column
     var col6 = document.createElement("td");
@@ -175,12 +211,8 @@ let modalTaskDetailInput = document.getElementById("detailInput");
 modalTaskDetailInput.classList.add("is-invalid");
 let modalAssigneeInput = document.getElementById("assigneeSelect");
 let modalDateInput = document.getElementById("dueDateInput");
+modalDateInput.classList.add("is-invalid");
 let modalStatusInput = document.getElementById("statusSelect");
-
-// set the default value of the modal date input to today's date
-var dateobj = new Date();
-var date = dateobj.toDateString();
-modalDateInput.value.innerHTML = date;
 
 function checkIfValidName(event) {
   if (event.target.value && event.target.value.length >= 8) {
@@ -202,15 +234,27 @@ function checkIfValidDesc(event) {
   }
 }
 
+function checkIfValidDate(event) {
+  if (event.target.value) {
+    event.target.classList.remove("is-invalid");
+    event.target.classList.add("is-valid");
+  } else {
+    event.target.classList.remove("is-valid");
+    event.target.classList.add("is-invalid");
+  }
+}
+
 modalTaskNameInput.addEventListener("input", checkIfValidName);
 modalTaskDetailInput.addEventListener("input", checkIfValidDesc);
+modalDateInput.addEventListener("input", checkIfValidDate);
 
 // add a new task and refresh the task table when the modal is submitted
 modalButton.onclick = function () {
   modalButton.setAttribute("data-dismiss", "modal");
   if (
     modalTaskNameInput.value.length < 8 ||
-    modalTaskDetailInput.value.length < 15
+    modalTaskDetailInput.value.length < 15 ||
+    modalDateInput.value === ""
   ) {
     modalButton.setAttribute("data-dismiss", "");
   } else {
@@ -226,12 +270,15 @@ modalButton.onclick = function () {
     modalTaskNameInput.value = null;
     modalTaskDetailInput.value = null;
     modalAssigneeInput.value = "Myself";
+    modalDateInput.value = null;
     modalStatusInput.value = "Not started";
 
     modalTaskNameInput.classList.toggle("is-valid");
     modalTaskDetailInput.classList.toggle("is-valid");
+    modalDateInput.classList.toggle("is-valid");
     modalTaskNameInput.classList.toggle("is-invalid");
     modalTaskDetailInput.classList.toggle("is-invalid");
+    modalDateInput.classList.toggle("is-invalid");
 
     buildTaskTable();
   }
