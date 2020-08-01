@@ -1,20 +1,18 @@
-.badge-primary {
-  background-color: lightpink;
-}
-.badge-success {
-  background-color: lightgreen;
-}
-
-.badge-warning {
-  background-color: paleturquoise;
+h1 {
+  text-align: center;
+  margin: 30px;
+  font-weight: 600;
+  font-size: 50px;
+  color: white;
 }
 
-.btn-primary {
-  background-color: lightseagreen;
-  border: lightseagreen;
-}
-
-.btn-secondary {
-  background-color: lightslategrey;
-  border: lightslategray;
+body {
+  display: flex;
+  flex-direction: column;
+  background: rgb(63, 94, 251);
+  background: linear-gradient(
+    90deg,
+    rgba(63, 94, 251, 0.7259278711484594) 0%,
+    rgba(252, 70, 107, 0.7287289915966386) 70%
+  );
 }
