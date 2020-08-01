@@ -179,6 +179,7 @@ function buildTaskTable() {
     newTaskDetailRow.setAttribute("id", taskDetailId);
     newTaskDetailRow.classList.add("bg-light");
     newTaskDetailRow.classList.add("collapse");
+    newTaskDetailRow.setAttribute("data-parent", "#taskTableBody");
 
     // create the blank column
     var col6 = document.createElement("td");
