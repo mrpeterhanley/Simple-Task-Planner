@@ -26,16 +26,16 @@
     
 
     <div
-      class="container container-fluid container-lg-1 container-md-3 container-sm-6 p-3 my-3 bg-white"
+      class="container container-fluid container-lg-1 container-md-3 container-sm-6 p-3 my-3 bg-white rounded"
     >
       
 
       <div class="d-flex justify-content-center mb-3">
         <div>
-          <button type="button" class="btn btn-primary mx-1" data-toggle="modal" data-target="#addTaskModal">+ Task</button>
+          <button type="button" class="btn btn-success mx-1" data-toggle="modal" data-target="#addTaskModal">Add Task</button>
         </div>
         <div>
-          <button type="button" class="btn btn-danger mx-1" id="deletebutton">- Task</button>
+          <button type="button" class="btn btn-danger mx-1" id="deletebutton">Delete Task</button>
         </div>
         <div class="dropdown">
           <button class="btn btn-secondary dropdown-toggle mx-1" id="assigneeDropDown" data-toggle="dropdown">Assignee</span>
@@ -45,7 +45,7 @@
           </div>
         </div>
         <div class="dropdown">
-          <button class="btn btn-secondary dropdown-toggle mx-1" id="filterDropDown" data-toggle="dropdown">Filter</span>
+          <button class="btn btn-secondary dropdown-toggle mx-1" id="filterDropDown" data-toggle="dropdown">Order Tasks</span>
           <div class="dropdown-menu" aria-labelledby="filterDropDown">
             <a class="dropdown-item" href="#">By Assignee</a>
             <a class="dropdown-item" href="#">By Due Date</a>
