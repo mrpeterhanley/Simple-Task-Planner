@@ -109,7 +109,7 @@ function buildTaskTable() {
       // overdue at least 1 day
       col3span.classList.add("badge-danger");
 
-      if (taskList[i].status !== ("In progress" || "Completed")) {
+      if (taskList[i].status == "Not started") {
         // task is not completed or in progress, switch status to overdue
         taskList[i].status = "Overdue";
       }
