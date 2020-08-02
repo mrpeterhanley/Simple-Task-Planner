@@ -52,8 +52,8 @@ function buildTaskTable() {
   for (var i = 0; i < taskList.length; i++) {
     //create a new task row
     var newTaskRow = document.createElement("tr");
-    var taskID = taskList[i].taskid; // = "1"
-    var taskDetailId = "detail" + taskList[i].taskid; // = "detail1"
+    var taskID = taskList[i].taskid; // e.g. "1"
+    var taskDetailId = "detail" + taskList[i].taskid; // e.g. "detail1"
     newTaskRow.setAttribute("id", taskID);
 
     // create the checkbox column
@@ -98,22 +98,24 @@ function buildTaskTable() {
 
     let taskDate = new Date(taskList[i].duedate);
 
+    // compare the task due date to the current date
     if (
       taskDate.getFullYear() == dateobj.getFullYear() &&
       taskDate.getMonth() == dateobj.getMonth() &&
       taskDate.getUTCDate() == dateobj.getUTCDate()
     ) {
-      // task due today
+      // task due today, set due date badge color to yellow
       col3span.classList.add("badge-warning");
     } else if (taskDate.getTime() < dateobj.getTime()) {
-      // overdue at least 1 day
+      // task overdue at least 1 day, set due date badge color to red
       col3span.classList.add("badge-danger");
 
       if (taskList[i].status == "Not started") {
-        // task is not completed or in progress, switch status to overdue
+        // task status is not completed or in progress, switch task status to overdue
         taskList[i].status = "Overdue";
       }
     } else {
+      // task is due in the future, set due date badge color to grey
       col3span.classList.add("badge-secondary");
     }
 
@@ -130,25 +132,33 @@ function buildTaskTable() {
     col4span.classList.add("badge");
     col4span.innerHTML = taskList[i].status;
 
-    if (taskList[i].status == "In progress") {
-      col4span.classList.add("badge-warning");
-    } else if (taskList[i].status == "Completed") {
-      col4span.classList.add("badge-success");
-    } else if (taskList[i].status == "Overdue") {
-      col4span.classList.add("badge-danger");
-    } else {
-      col4span.classList.add("badge-secondary");
+    // set task status badge color according to status
+    switch (taskList[i].status) {
+      case "In progress":
+        col4span.classList.add("badge-warning");
+        break;
+      case "Completed":
+        col4span.classList.add("badge-success");
+        break;
+      case "Overdue":
+        col4span.classList.add("badge-danger");
+        break;
+      default:
+        col4span.classList.add("badge-secondary");
+        break;
     }
 
+    // add task status badge to the column
     col4.appendChild(col4span);
 
-    // add to the row
+    // add task status column to the row
     newTaskRow.appendChild(col4);
 
-    // create the edit button column
+    // create the detail / edit button column
     var col5 = document.createElement("td");
     col5.setAttribute("scope", "col");
 
+    // create the drop down detail button
     var col5span = document.createElement("span");
     col5span.classList.add(
       "badge",
@@ -157,17 +167,23 @@ function buildTaskTable() {
       "mx-1"
     );
 
+    // link the drop down detail button to the collapsible detail row
     col5span.setAttribute("data-toggle", "collapse");
     col5span.setAttribute("data-target", "#" + taskDetailId);
     col5span.innerHTML = "Details";
+
+    //add the detail button to the column
     col5.appendChild(col5span);
 
+    // create the edit button
     var col5span2 = document.createElement("span");
     col5span2.classList.add("badge", "badge-info");
     col5span2.innerHTML = "Edit";
+
+    //add the edit button to the column
     col5.appendChild(col5span2);
 
-    // add to the row
+    // add the buttons column to the row
     newTaskRow.appendChild(col5);
 
     // add the new task row to the table
@@ -181,7 +197,7 @@ function buildTaskTable() {
     newTaskDetailRow.classList.add("collapse");
     newTaskDetailRow.setAttribute("data-parent", "#taskTableBody");
 
-    // create the blank column
+    // create a blank column
     var col6 = document.createElement("td");
     col6.setAttribute("scope", "col");
 
@@ -197,6 +213,7 @@ function buildTaskTable() {
     // add to the row
     newTaskDetailRow.appendChild(col7);
 
+    // add the task detail row to the table
     taskTableBody.appendChild(newTaskDetailRow);
   }
 }
@@ -214,6 +231,7 @@ let modalDateInput = document.getElementById("dueDateInput");
 modalDateInput.classList.add("is-invalid");
 let modalStatusInput = document.getElementById("statusSelect");
 
+// validate task name input of modal
 function checkIfValidName(event) {
   if (event.target.value && event.target.value.length >= 8) {
     event.target.classList.remove("is-invalid");
@@ -224,6 +242,7 @@ function checkIfValidName(event) {
   }
 }
 
+//validate task description input of modal
 function checkIfValidDesc(event) {
   if (event.target.value && event.target.value.length >= 15) {
     event.target.classList.remove("is-invalid");
@@ -234,6 +253,7 @@ function checkIfValidDesc(event) {
   }
 }
 
+//validate task due date input of modal
 function checkIfValidDate(event) {
   if (event.target.value) {
     event.target.classList.remove("is-invalid");
