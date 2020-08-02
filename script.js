@@ -102,7 +102,7 @@ function buildTaskTable() {
     if (
       taskDate.getFullYear() == dateobj.getFullYear() &&
       taskDate.getMonth() == dateobj.getMonth() &&
-      taskDate.getUTCDate() == dateobj.getUTCDate()
+      taskDate.getDate() == dateobj.getDate()
     ) {
       // task due today, set due date badge color to yellow
       col3span.classList.add("badge-warning");
