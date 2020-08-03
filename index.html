@@ -26,34 +26,34 @@
     
 
     <div
-      class="container container-fluid container-lg-1 container-md-3 container-sm-6 p-3 my-3 bg-white rounded"
+      class="container container-fluid container-lg-1 container-md-3 container-sm-6 bg-white rounded"
     >
       
 
-      <div class="d-flex justify-content-center mb-3">
+      <div class="d-flex flex-wrap align-items-center justify-content-center p-3">
         <div>
-          <button type="button" class="btn btn-success mx-1" data-toggle="modal" data-target="#addTaskModal">Add Task</button>
+          <button type="button" class="btn btn-success m-1" data-toggle="modal" data-target="#addTaskModal">Add Task</button>
+        
+          <button type="button" class="btn btn-danger m-1" id="deletebutton">Delete Task</button>
         </div>
-        <div>
-          <button type="button" class="btn btn-danger mx-1" id="deletebutton">Delete Task</button>
-        </div>
-        <div class="dropdown">
-          <button class="btn btn-secondary dropdown-toggle mx-1" id="assigneeDropDown" data-toggle="dropdown">Assignee</span>
-          <div class="dropdown-menu" aria-labelledby="assigneeDropDown">
-            <a class="dropdown-item" data-toggle="modal" data-target="#addAssigneeModal">Add Assignee</a>
-            <a class="dropdown-item" href="#">Delete Assignee</a>
+        
+          <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle m-1" id="assigneeDropDown" data-toggle="dropdown">Assignee</span>
+            <div class="dropdown-menu" aria-labelledby="assigneeDropDown">
+              <a class="dropdown-item" data-toggle="modal" data-target="#addAssigneeModal">Add Assignee</a>
+              <a class="dropdown-item" href="#">Delete Assignee</a>
+            </div>
           </div>
-        </div>
-        <div class="dropdown">
-          <button class="btn btn-secondary dropdown-toggle mx-1" id="filterDropDown" data-toggle="dropdown">Order Tasks</span>
-          <div class="dropdown-menu" aria-labelledby="filterDropDown">
-            <a class="dropdown-item" href="#">By Assignee</a>
-            <a class="dropdown-item" href="#">By Due Date</a>
-            <a class="dropdown-item" href="#">By Status</a>
+          <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle m-1" id="filterDropDown" data-toggle="dropdown">Order Tasks</span>
+            <div class="dropdown-menu" aria-labelledby="filterDropDown">
+              <a class="dropdown-item" href="#">By Assignee</a>
+              <a class="dropdown-item" href="#">By Due Date</a>
+              <a class="dropdown-item" href="#">By Status</a>
+            </div>
           </div>
-        </div>
-      </div>
       
+        </div>
       <div class="table-responsive">
         <table class="table">
           <!--Heading row-->
