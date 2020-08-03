@@ -1,41 +1,53 @@
 // Create the task list object array
-let taskList = [];
-let idCounter = 1;
 let dateobj = new Date();
 let date = dateobj.toDateString();
 
-// Make a function to create a new task object
-function createTask(taskName, taskDetails, taskAssignee, taskDate, taskStatus) {
-  var task = {
-    taskid: idCounter,
-    name: taskName,
-    details: taskDetails,
-    assignee: taskAssignee,
-    duedate: taskDate,
-    status: taskStatus,
-  };
-  idCounter++;
-  return task;
+class TaskManager {
+  constructor(parent) {
+    this.tasks = [];
+    this.currentId = 1;
+    this.parent = parent;
+  }
+
+  addTask(name, details, assignee, duedate, status) {
+    const task = new Task(
+      this.currentId++,
+      name,
+      details,
+      assignee,
+      duedate,
+      status
+    );
+
+    this.tasks.push(task);
+  }
+
+  deleteTask(id) {
+    //this.tasks = this.tasks.filter((task) => task.id !== id);
+
+    for (let i = 0; i < this.tasks.length; i++) {
+      if (this.tasks[i].id == id) {
+        // delete the task
+        this.tasks.splice(i, 1);
+      }
+    }
+  }
 }
 
-//create some sample tasks and add them to the task list array
-let task1 = createTask(
-  "Go to bank",
-  "Apply for new credit card",
-  "Peter",
-  "2020-07-01",
-  "Not started"
-);
+class Task {
+  constructor(id, name, details, assignee, duedate, status) {
+    this.id = id;
+    this.name = name;
+    this.details = details;
+    this.assignee = assignee;
+    this.duedate = duedate;
+    this.status = status;
+  }
+}
 
-let task2 = createTask(
-  "Buy groceries",
-  "Milk, cheese, fruit, bread, vegetables",
-  "Catalina",
-  "2020-08-01",
-  "Not started"
-);
+const taskManager = new TaskManager();
 
-taskList.push(task1, task2);
+//taskManager.addTask();
 
 // Cycle through the task list array and build the table body
 
@@ -49,11 +61,14 @@ function buildTaskTable() {
     taskTableBody.removeChild(taskTableBody.firstChild);
   }
 
-  for (var i = 0; i < taskList.length; i++) {
+  for (var i = 0; i < taskManager.tasks.length; i++) {
     //create a new task row
     var newTaskRow = document.createElement("tr");
-    var taskID = taskList[i].taskid; // e.g. "1"
-    var taskDetailId = "detail" + taskList[i].taskid; // e.g. "detail1"
+
+    var taskID = taskManager.tasks[i].id;
+
+    var taskDetailId = "detail" + taskID;
+    // e.g. "detail1"
     newTaskRow.setAttribute("id", taskID);
 
     // create the checkbox column
@@ -62,6 +77,9 @@ function buildTaskTable() {
     var input = document.createElement("input");
     input.setAttribute("type", "checkbox");
     input.setAttribute("data-id", taskID);
+
+    console.log("Checkbox ID " + input.getAttribute("data-id"));
+
     input.classList.add("checkbox");
     col0.appendChild(input);
 
@@ -71,7 +89,7 @@ function buildTaskTable() {
     // create the task name column
     var col1 = document.createElement("td");
     col1.setAttribute("scope", "col");
-    col1.innerHTML = taskList[i].name;
+    col1.innerHTML = taskManager.tasks[i].name;
 
     // add to the row
     newTaskRow.appendChild(col1);
@@ -82,7 +100,7 @@ function buildTaskTable() {
 
     var col2span = document.createElement("span");
     col2span.classList.add("badge", "badge-secondary");
-    col2span.innerHTML = taskList[i].assignee;
+    col2span.innerHTML = taskManager.tasks[i].assignee;
     col2.appendChild(col2span);
 
     // add to the row
@@ -94,9 +112,9 @@ function buildTaskTable() {
 
     var col3span = document.createElement("span");
     col3span.classList.add("badge");
-    col3span.innerHTML = taskList[i].duedate;
+    col3span.innerHTML = taskManager.tasks[i].duedate;
 
-    let taskDate = new Date(taskList[i].duedate);
+    let taskDate = new Date(taskManager.tasks[i].duedate);
 
     // compare the task due date to the current date
     if (
@@ -110,9 +128,9 @@ function buildTaskTable() {
       // task overdue at least 1 day, set due date badge color to red
       col3span.classList.add("badge-danger");
 
-      if (taskList[i].status == "Not started") {
+      if (taskManager.tasks[i].status == "Not started") {
         // task status is not completed or in progress, switch task status to overdue
-        taskList[i].status = "Overdue";
+        taskManager.tasks[i].status = "Overdue";
       }
     } else {
       // task is due in the future, set due date badge color to grey
@@ -130,10 +148,10 @@ function buildTaskTable() {
 
     var col4span = document.createElement("span");
     col4span.classList.add("badge");
-    col4span.innerHTML = taskList[i].status;
+    col4span.innerHTML = taskManager.tasks[i].status;
 
     // set task status badge color according to status
-    switch (taskList[i].status) {
+    switch (taskManager.tasks[i].status) {
       case "In progress":
         col4span.classList.add("badge-warning");
         break;
@@ -208,7 +226,7 @@ function buildTaskTable() {
     var col7 = document.createElement("td");
     col7.setAttribute("scope", "col");
     col7.setAttribute("colspan", "5");
-    col7.innerHTML = taskList[i].details;
+    col7.innerHTML = taskManager.tasks[i].details;
 
     // add to the row
     newTaskDetailRow.appendChild(col7);
@@ -278,15 +296,14 @@ modalButton.onclick = function () {
   ) {
     modalButton.setAttribute("data-dismiss", "");
   } else {
-    taskList.push(
-      createTask(
-        modalTaskNameInput.value,
-        modalTaskDetailInput.value,
-        modalAssigneeInput.value,
-        modalDateInput.value,
-        modalStatusInput.value
-      )
+    taskManager.addTask(
+      modalTaskNameInput.value,
+      modalTaskDetailInput.value,
+      modalAssigneeInput.value,
+      modalDateInput.value,
+      modalStatusInput.value
     );
+
     modalTaskNameInput.value = null;
     modalTaskDetailInput.value = null;
     modalAssigneeInput.value = "Myself";
@@ -304,21 +321,18 @@ modalButton.onclick = function () {
   }
 };
 
-deleteTaskObjectById = function (id) {
-  for (let i = 0; i < taskList.length; i++) {
-    if (id == taskList[i].taskid) {
-      taskList.splice(i, 1);
-    }
-  }
-};
-
 deleteButtonClick = function () {
   let checkBoxList = document.getElementsByClassName("checkbox");
 
   for (let i = 0; i < checkBoxList.length; i++) {
     if (checkBoxList[i].checked == true) {
       let id = checkBoxList[i].getAttribute("data-id");
-      deleteTaskObjectById(id);
+
+      console.log("Deleting this task: " + id);
+
+      taskManager.deleteTask(id);
+
+      console.log("Deleted checkbox id: " + id);
     }
   }
 
@@ -327,3 +341,27 @@ deleteButtonClick = function () {
 
 let deletebutton = document.querySelector("#deletebutton");
 deletebutton.addEventListener("click", deleteButtonClick);
+
+// Anindha's code
+
+// function addTask(name, date, time, assigned, description) {
+// 	let html = `
+// 		<tr>
+// 			<td>test</td>
+// 			<td>${name}</td>
+// 			<td>${description}</td>
+// 			<td>${assigned}</td>
+// 			<td>${date}</td>
+// 			<td>${time}</td>
+// 			<td>test</td>
+// 		</tr>
+// 	`;
+// 	const table = document.createElement(`table`);
+// 	const tbody = document.createElement(`tbody`);
+// 	table.appendChild(tbody);
+// 	const range = document.createRange();
+// 	range.selectNodeContents(tbody);
+// 	const taskElement = range.createContextualFragment(html);
+// 	console.log(taskElement);
+// 	tableBody.append(taskElement);
+// }
