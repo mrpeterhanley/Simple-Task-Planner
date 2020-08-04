@@ -1,6 +1,4 @@
 // Create the task list object array
-let dateobj = new Date();
-let date = dateobj.toDateString();
 
 class TaskManager {
   constructor(parent) {
@@ -22,6 +20,16 @@ class TaskManager {
     this.tasks.push(task);
   }
 
+  buildTaskTable() {
+    let taskTableBody = document.querySelector("#taskTableBody");
+
+    taskTableBody.innerHTML = "";
+
+    this.tasks.forEach((task) => {
+      task.buildTask(taskTableBody);
+    });
+  }
+
   deleteTask(id) {
     //this.tasks = this.tasks.filter((task) => task.id !== id);
 
@@ -34,209 +42,189 @@ class TaskManager {
   }
 }
 
+function buildColumn() {
+  let col = document.createElement("td");
+  col.setAttribute("scope", "col");
+  return col;
+}
+
+function buildBadge(text, badgeClass = "badge-secondary") {
+  let badge = document.createElement("span");
+  badge.classList.add("badge");
+  badge.classList.add(badgeClass);
+  badge.innerHTML = text;
+  return badge;
+}
+
 class Task {
   constructor(id, name, details, assignee, duedate, status) {
     this.id = id;
+    this.detailId = "d" + id;
     this.name = name;
     this.details = details;
     this.assignee = assignee;
     this.duedate = duedate;
     this.status = status;
   }
-}
 
-const taskManager = new TaskManager();
-
-//taskManager.addTask();
-
-// Cycle through the task list array and build the table body
-
-function buildTaskTable() {
-  // cycle through each task object in task list array
-
-  // get the task table body element
-  let taskTableBody = document.querySelector("#taskTableBody");
-
-  while (taskTableBody.firstChild) {
-    taskTableBody.removeChild(taskTableBody.firstChild);
-  }
-
-  for (var i = 0; i < taskManager.tasks.length; i++) {
-    //create a new task row
-    var newTaskRow = document.createElement("tr");
-
-    var taskID = taskManager.tasks[i].id;
-
-    var taskDetailId = "detail" + taskID;
-    // e.g. "detail1"
-    newTaskRow.setAttribute("id", taskID);
+  buildTask(parentElement) {
+    let newTaskRow = document.createElement("tr");
 
     // create the checkbox column
-    var col0 = document.createElement("td");
-    col0.setAttribute("scope", "col");
-    var input = document.createElement("input");
+    let col1 = buildColumn();
+    let input = document.createElement("input");
     input.setAttribute("type", "checkbox");
-    input.setAttribute("data-id", taskID);
-
-    console.log("Checkbox ID " + input.getAttribute("data-id"));
+    input.setAttribute("data-id", this.id);
 
     input.classList.add("checkbox");
-    col0.appendChild(input);
+    col1.appendChild(input);
 
     //add to the row
-    newTaskRow.appendChild(col0);
-
-    // create the task name column
-    var col1 = document.createElement("td");
-    col1.setAttribute("scope", "col");
-    col1.innerHTML = taskManager.tasks[i].name;
-
-    // add to the row
     newTaskRow.appendChild(col1);
 
-    // create the task assignee column
-    var col2 = document.createElement("td");
-    col2.setAttribute("scope", "col");
-
-    var col2span = document.createElement("span");
-    col2span.classList.add("badge", "badge-secondary");
-    col2span.innerHTML = taskManager.tasks[i].assignee;
-    col2.appendChild(col2span);
+    // create the task name column
+    let col2 = buildColumn();
+    col2.innerHTML = this.name;
 
     // add to the row
     newTaskRow.appendChild(col2);
 
-    // create the due date column
-    var col3 = document.createElement("td");
-    col3.setAttribute("scope", "col");
+    // create the task assignee column
+    let col3 = buildColumn();
 
-    var col3span = document.createElement("span");
-    col3span.classList.add("badge");
-    col3span.innerHTML = taskManager.tasks[i].duedate;
-
-    let taskDate = new Date(taskManager.tasks[i].duedate);
-
-    // compare the task due date to the current date
-    if (
-      taskDate.getFullYear() == dateobj.getFullYear() &&
-      taskDate.getMonth() == dateobj.getMonth() &&
-      taskDate.getDate() == dateobj.getDate()
-    ) {
-      // task due today, set due date badge color to yellow
-      col3span.classList.add("badge-warning");
-    } else if (taskDate.getTime() < dateobj.getTime()) {
-      // task overdue at least 1 day, set due date badge color to red
-      col3span.classList.add("badge-danger");
-
-      if (taskManager.tasks[i].status == "Not started") {
-        // task status is not completed or in progress, switch task status to overdue
-        taskManager.tasks[i].status = "Overdue";
-      }
-    } else {
-      // task is due in the future, set due date badge color to grey
-      col3span.classList.add("badge-secondary");
-    }
-
-    col3.appendChild(col3span);
+    col3.appendChild(buildBadge(this.assignee));
 
     // add to the row
     newTaskRow.appendChild(col3);
 
-    // create the task status column
-    var col4 = document.createElement("td");
-    col4.setAttribute("scope", "col");
+    // create the due date column
+    let col4 = buildColumn();
 
-    var col4span = document.createElement("span");
-    col4span.classList.add("badge");
-    col4span.innerHTML = taskManager.tasks[i].status;
+    let dueDateBadge;
+
+    let taskDate = new Date(this.duedate);
+
+    let currentDate = new Date();
+
+    // compare the task due date to the current date
+    if (
+      taskDate.getFullYear() == currentDate.getFullYear() &&
+      taskDate.getMonth() == currentDate.getMonth() &&
+      taskDate.getDate() == currentDate.getDate()
+    ) {
+      // task due today, set due date badge color to yellow
+
+      dueDateBadge = buildBadge(this.duedate, "badge-warning");
+    } else if (taskDate.getTime() < currentDate.getTime()) {
+      // task overdue at least 1 day, set due date badge color to red
+      dueDateBadge = buildBadge(this.duedate, "badge-danger");
+
+      if (this.status == "Not started") {
+        // task status is not completed or in progress, switch task status to overdue
+        this.status = "Overdue";
+      }
+    } else {
+      // task is due in the future, set due date badge color to grey
+      dueDateBadge = buildBadge(this.duedate);
+    }
+
+    col4.appendChild(dueDateBadge);
+
+    // add to the row
+    newTaskRow.appendChild(col4);
+
+    // create the task status column
+    let col5 = buildColumn();
+
+    let statusBadge;
 
     // set task status badge color according to status
-    switch (taskManager.tasks[i].status) {
+    switch (this.status) {
       case "In progress":
-        col4span.classList.add("badge-warning");
+        statusBadge = buildBadge(this.status, "badge-warning");
         break;
       case "Completed":
-        col4span.classList.add("badge-success");
+        statusBadge = buildBadge(this.status, "badge-success");
         break;
       case "Overdue":
-        col4span.classList.add("badge-danger");
+        statusBadge = buildBadge(this.status, "badge-danger");
         break;
       default:
-        col4span.classList.add("badge-secondary");
+        statusBadge = buildBadge(this.status);
         break;
     }
 
     // add task status badge to the column
-    col4.appendChild(col4span);
+    col5.appendChild(statusBadge);
 
     // add task status column to the row
-    newTaskRow.appendChild(col4);
-
-    // create the detail / edit button column
-    var col5 = document.createElement("td");
-    col5.setAttribute("scope", "col");
-
-    // create the drop down detail button
-    var col5span = document.createElement("span");
-    col5span.classList.add(
-      "badge",
-      "badge-secondary",
-      "dropdown-toggle",
-      "mx-1"
-    );
-
-    // link the drop down detail button to the collapsible detail row
-    col5span.setAttribute("data-toggle", "collapse");
-    col5span.setAttribute("data-target", "#" + taskDetailId);
-    col5span.innerHTML = "Details";
-
-    //add the detail button to the column
-    col5.appendChild(col5span);
-
-    // create the edit button
-    var col5span2 = document.createElement("span");
-    col5span2.classList.add("badge", "badge-info");
-    col5span2.innerHTML = "Edit";
-
-    //add the edit button to the column
-    col5.appendChild(col5span2);
-
-    // add the buttons column to the row
     newTaskRow.appendChild(col5);
 
-    // add the new task row to the table
-    taskTableBody.appendChild(newTaskRow);
+    // create the detail / edit button column
+    let col6 = buildColumn();
+
+    // create the drop down detail button
+    let detailBadge = buildBadge("Details");
+    detailBadge.classList.add("dropdown-toggle", "mx-1");
+
+    // link the drop down detail button to the collapsible detail row
+    detailBadge.setAttribute("data-toggle", "collapse");
+    detailBadge.setAttribute("data-target", "#" + this.detailId);
+
+    //add the detail button to the column
+    col6.appendChild(detailBadge);
+
+    //add the edit button to the column
+    col6.appendChild(buildBadge("Edit", "badge-info"));
+
+    // add the buttons column to the row
+    newTaskRow.appendChild(col6);
 
     //create a new task detail row
     var newTaskDetailRow = document.createElement("tr");
 
-    newTaskDetailRow.setAttribute("id", taskDetailId);
-    newTaskDetailRow.classList.add("bg-light");
-    newTaskDetailRow.classList.add("collapse");
+    newTaskDetailRow.setAttribute("id", this.detailId);
+    newTaskDetailRow.classList.add("bg-light", "collapse");
     newTaskDetailRow.setAttribute("data-parent", "#taskTableBody");
 
     // create a blank column
-    var col6 = document.createElement("td");
-    col6.setAttribute("scope", "col");
+    let col7 = buildColumn();
 
     //add to the row
-    newTaskDetailRow.appendChild(col6);
-
-    // create the task detail column
-    var col7 = document.createElement("td");
-    col7.setAttribute("scope", "col");
-    col7.setAttribute("colspan", "5");
-    col7.innerHTML = taskManager.tasks[i].details;
-
-    // add to the row
     newTaskDetailRow.appendChild(col7);
 
-    // add the task detail row to the table
-    taskTableBody.appendChild(newTaskDetailRow);
+    // create the task detail column
+    let col8 = buildColumn();
+    col8.setAttribute("colspan", "5");
+    col8.innerHTML = this.details;
+
+    // add to the row
+    newTaskDetailRow.appendChild(col8);
+
+    parentElement.appendChild(newTaskRow);
+    parentElement.appendChild(newTaskDetailRow);
   }
 }
 
-buildTaskTable(); // Build out the task table from the task list array
+const taskManager = new TaskManager();
+
+taskManager.addTask(
+  "Go to bank",
+  "Withdraw $500",
+  "Peter",
+  "2020-08-10",
+  "Not started"
+);
+
+taskManager.addTask(
+  "Go shopping",
+  "Buy fresh vegetables, fruit. Make sure to go before 8pm",
+  "Catalina",
+  "2020-08-03",
+  "Not started"
+);
+
+taskManager.buildTaskTable();
 
 // get the add task modal elements
 let modalButton = document.getElementById("addTaskModalButton");
@@ -317,7 +305,7 @@ modalButton.onclick = function () {
     modalTaskDetailInput.classList.toggle("is-invalid");
     modalDateInput.classList.toggle("is-invalid");
 
-    buildTaskTable();
+    taskManager.buildTaskTable();
   }
 };
 
@@ -327,41 +315,12 @@ deleteButtonClick = function () {
   for (let i = 0; i < checkBoxList.length; i++) {
     if (checkBoxList[i].checked == true) {
       let id = checkBoxList[i].getAttribute("data-id");
-
-      console.log("Deleting this task: " + id);
-
       taskManager.deleteTask(id);
-
-      console.log("Deleted checkbox id: " + id);
     }
   }
 
-  buildTaskTable();
+  taskManager.buildTaskTable();
 };
 
 let deletebutton = document.querySelector("#deletebutton");
 deletebutton.addEventListener("click", deleteButtonClick);
-
-// Anindha's code
-
-// function addTask(name, date, time, assigned, description) {
-// 	let html = `
-// 		<tr>
-// 			<td>test</td>
-// 			<td>${name}</td>
-// 			<td>${description}</td>
-// 			<td>${assigned}</td>
-// 			<td>${date}</td>
-// 			<td>${time}</td>
-// 			<td>test</td>
-// 		</tr>
-// 	`;
-// 	const table = document.createElement(`table`);
-// 	const tbody = document.createElement(`tbody`);
-// 	table.appendChild(tbody);
-// 	const range = document.createRange();
-// 	range.selectNodeContents(tbody);
-// 	const taskElement = range.createContextualFragment(html);
-// 	console.log(taskElement);
-// 	tableBody.append(taskElement);
-// }
