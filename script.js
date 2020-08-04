@@ -1,5 +1,5 @@
 class TaskManager {
-  constructor(t) {
+  constructor() {
     this.tasks = [];
     this.currentId = 1;
   }
