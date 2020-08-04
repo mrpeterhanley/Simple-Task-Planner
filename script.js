@@ -1,10 +1,7 @@
-// Create the task list object array
-
 class TaskManager {
-  constructor(parent) {
+  constructor() {
     this.tasks = [];
     this.currentId = 1;
-    this.parent = parent;
   }
 
   addTask(name, details, assignee, duedate, status) {
@@ -42,20 +39,6 @@ class TaskManager {
   }
 }
 
-function buildColumn() {
-  let col = document.createElement("td");
-  col.setAttribute("scope", "col");
-  return col;
-}
-
-function buildBadge(text, badgeClass = "badge-secondary") {
-  let badge = document.createElement("span");
-  badge.classList.add("badge");
-  badge.classList.add(badgeClass);
-  badge.innerHTML = text;
-  return badge;
-}
-
 class Task {
   constructor(id, name, details, assignee, duedate, status) {
     this.id = id;
@@ -67,43 +50,46 @@ class Task {
     this.status = status;
   }
 
+  buildColumn() {
+    let col = document.createElement("td");
+    col.setAttribute("scope", "col");
+    return col;
+  }
+
+  buildBadge(text, badgeClass = "badge-secondary") {
+    let badge = document.createElement("span");
+    badge.classList.add("badge");
+    badge.classList.add(badgeClass);
+    badge.innerHTML = text;
+    return badge;
+  }
+
   buildTask(parentElement) {
     let newTaskRow = document.createElement("tr");
 
     // create the checkbox column
-    let col1 = buildColumn();
     let input = document.createElement("input");
     input.setAttribute("type", "checkbox");
     input.setAttribute("data-id", this.id);
-
     input.classList.add("checkbox");
-    col1.appendChild(input);
 
-    //add to the row
+    let col1 = this.buildColumn();
+    col1.appendChild(input);
     newTaskRow.appendChild(col1);
 
     // create the task name column
-    let col2 = buildColumn();
+    let col2 = this.buildColumn();
     col2.innerHTML = this.name;
-
-    // add to the row
     newTaskRow.appendChild(col2);
 
     // create the task assignee column
-    let col3 = buildColumn();
-
-    col3.appendChild(buildBadge(this.assignee));
-
-    // add to the row
+    let col3 = this.buildColumn();
+    col3.appendChild(this.buildBadge(this.assignee));
     newTaskRow.appendChild(col3);
 
     // create the due date column
-    let col4 = buildColumn();
-
     let dueDateBadge;
-
     let taskDate = new Date(this.duedate);
-
     let currentDate = new Date();
 
     // compare the task due date to the current date
@@ -114,10 +100,10 @@ class Task {
     ) {
       // task due today, set due date badge color to yellow
 
-      dueDateBadge = buildBadge(this.duedate, "badge-warning");
+      dueDateBadge = this.buildBadge(this.duedate, "badge-warning");
     } else if (taskDate.getTime() < currentDate.getTime()) {
       // task overdue at least 1 day, set due date badge color to red
-      dueDateBadge = buildBadge(this.duedate, "badge-danger");
+      dueDateBadge = this.buildBadge(this.duedate, "badge-danger");
 
       if (this.status == "Not started") {
         // task status is not completed or in progress, switch task status to overdue
@@ -125,46 +111,39 @@ class Task {
       }
     } else {
       // task is due in the future, set due date badge color to grey
-      dueDateBadge = buildBadge(this.duedate);
+      dueDateBadge = this.buildBadge(this.duedate);
     }
 
+    let col4 = this.buildColumn();
     col4.appendChild(dueDateBadge);
-
-    // add to the row
     newTaskRow.appendChild(col4);
 
     // create the task status column
-    let col5 = buildColumn();
-
     let statusBadge;
 
     // set task status badge color according to status
     switch (this.status) {
       case "In progress":
-        statusBadge = buildBadge(this.status, "badge-warning");
+        statusBadge = this.buildBadge(this.status, "badge-warning");
         break;
       case "Completed":
-        statusBadge = buildBadge(this.status, "badge-success");
+        statusBadge = this.buildBadge(this.status, "badge-success");
         break;
       case "Overdue":
-        statusBadge = buildBadge(this.status, "badge-danger");
+        statusBadge = this.buildBadge(this.status, "badge-danger");
         break;
       default:
-        statusBadge = buildBadge(this.status);
+        statusBadge = this.buildBadge(this.status);
         break;
     }
 
-    // add task status badge to the column
+    // add task status badge to the column, add column to the row
+    let col5 = this.buildColumn();
     col5.appendChild(statusBadge);
-
-    // add task status column to the row
     newTaskRow.appendChild(col5);
 
-    // create the detail / edit button column
-    let col6 = buildColumn();
-
     // create the drop down detail button
-    let detailBadge = buildBadge("Details");
+    let detailBadge = this.buildBadge("Details");
     detailBadge.classList.add("dropdown-toggle", "mx-1");
 
     // link the drop down detail button to the collapsible detail row
@@ -172,10 +151,11 @@ class Task {
     detailBadge.setAttribute("data-target", "#" + this.detailId);
 
     //add the detail button to the column
+    let col6 = this.buildColumn();
     col6.appendChild(detailBadge);
 
     //add the edit button to the column
-    col6.appendChild(buildBadge("Edit", "badge-info"));
+    col6.appendChild(this.buildBadge("Edit", "badge-info"));
 
     // add the buttons column to the row
     newTaskRow.appendChild(col6);
@@ -187,18 +167,13 @@ class Task {
     newTaskDetailRow.classList.add("bg-light", "collapse");
     newTaskDetailRow.setAttribute("data-parent", "#taskTableBody");
 
-    // create a blank column
-    let col7 = buildColumn();
-
-    //add to the row
-    newTaskDetailRow.appendChild(col7);
+    // create a blank column (Column 7) & add to row
+    newTaskDetailRow.appendChild(this.buildColumn());
 
     // create the task detail column
-    let col8 = buildColumn();
+    let col8 = this.buildColumn();
     col8.setAttribute("colspan", "5");
     col8.innerHTML = this.details;
-
-    // add to the row
     newTaskDetailRow.appendChild(col8);
 
     parentElement.appendChild(newTaskRow);
