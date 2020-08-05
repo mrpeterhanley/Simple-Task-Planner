@@ -1,7 +1,8 @@
 class TaskManager {
-  constructor() {
+  constructor(modalId) {
     this.tasks = [];
-    this.currentId = 1;
+    this.currentId = 0;
+    this.modal = new Modal(modalId);
   }
 
   addTask(name, details, assignee, duedate, status) {
@@ -17,7 +18,54 @@ class TaskManager {
     this.tasks.push(task);
   }
 
-  buildTaskTable() {
+  getTask(id) {
+    return this.tasks[id];
+  }
+
+  buildTaskPlanner() {
+    let modalElement = this.modal.buildModal();
+    let modalContainer = document.querySelector("#modalContainer");
+    modalContainer.innerHTML = "";
+    modalContainer.appendChild(modalElement);
+
+    const addTaskButton = document.querySelector("#addTaskButton");
+
+    addTaskButton.addEventListener("click", (e) => {
+      this.modal.taskName = "";
+      this.modal.taskDetail = "";
+      this.modal.taskDate = "";
+
+      this.modal.modalTitle = "Add Task";
+      this.modal.submitButton = "Add Task";
+
+      this.modal.buildModal();
+      this.modal.showModal(e);
+    });
+
+    let modalSubmitButton = document.getElementById("modal-submit-button");
+
+    modalSubmitButton.addEventListener("click", (e) => {
+      console.log("You want to add or edit a task");
+    });
+
+    let deletebutton = document.querySelector("#deletebutton");
+
+    deletebutton.addEventListener("click", (e) => {
+      let checkBoxList = document.getElementsByClassName("checkbox");
+
+      for (let i = 0; i < checkBoxList.length; i++) {
+        if (checkBoxList[i].checked == true) {
+          let id = checkBoxList[i].getAttribute("data-id");
+          this.deleteTask(id);
+        }
+      }
+      this.refreshTaskPlanner();
+    });
+
+    this.refreshTaskPlanner();
+  }
+
+  refreshTaskPlanner() {
     let taskTableBody = document.querySelector("#taskTableBody");
 
     taskTableBody.innerHTML = "";
@@ -25,17 +73,32 @@ class TaskManager {
     this.tasks.forEach((task) => {
       task.buildTask(taskTableBody);
     });
+
+    const editButtons = document.querySelectorAll(".editButton");
+
+    editButtons.forEach((editButton) => {
+      editButton.addEventListener("click", (e) => {
+        let taskId = e.target.getAttribute("data-id");
+
+        let task = this.getTask(taskId);
+
+        console.log(task.name);
+
+        this.modal.taskName = task.name;
+        this.modal.taskDetail = task.details;
+        this.modal.taskDate = task.duedate;
+
+        this.modal.modalTitle = "Edit Task";
+        this.modal.submitButton = "Update Task";
+
+        this.modal.buildModal();
+        this.modal.showModal(e);
+      });
+    });
   }
 
   deleteTask(id) {
-    //this.tasks = this.tasks.filter((task) => task.id !== id);
-
-    for (let i = 0; i < this.tasks.length; i++) {
-      if (this.tasks[i].id == id) {
-        // delete the task
-        this.tasks.splice(i, 1);
-      }
-    }
+    this.tasks = this.tasks.filter((task) => task.id != id);
   }
 }
 
@@ -155,7 +218,11 @@ class Task {
     col6.appendChild(detailBadge);
 
     //add the edit button to the column
-    col6.appendChild(this.buildBadge("Edit", "badge-info"));
+
+    let editBadge = this.buildBadge("Edit", "badge-info");
+    editBadge.classList.add("editButton");
+    editBadge.setAttribute("data-id", this.id);
+    col6.appendChild(editBadge);
 
     // add the buttons column to the row
     newTaskRow.appendChild(col6);
@@ -181,7 +248,133 @@ class Task {
   }
 }
 
-const taskManager = new TaskManager();
+class Modal {
+  constructor(modalId) {
+    this.modalId = modalId;
+    this.modalTitle = "Add Task";
+    this.taskName = "";
+    this.taskDetail = "";
+    this.taskAssignee;
+    this.taskDate = new Date();
+    this.taskStatus = "Not started";
+    this.submitButton = "Add Task";
+  }
+
+  validate() {
+    if (this.taskName.length < 8 || this.taskDetail.length < 15) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  buildModal() {
+    let modalHtml = `<div class="modal fade" id="${
+      this.modalId
+    }" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">${this.modalTitle}</h5>
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <div class="form-group">
+              <label for="#taskNameInput">Task Name</label>
+              <input
+                type="text"
+                class="form-control"
+                id="taskNameInput"
+                value="${this.taskName}"
+              />
+              <div class="valid-feedback">Looks good!</div>
+              <div class="invalid-feedback">Task name should be a minimum of 8 characters</div>
+            </div>
+            <div class="form-group">
+              <label for="#detailInput">Task Details</label>
+              <textarea
+                class="form-control"
+                id="detailInput"
+                rows="3"
+              >${this.taskDetail}</textarea>
+              <div class="valid-feedback">Looks good!</div>
+              <div class="invalid-feedback">Task description should be a minimum of 15 characters</div>
+            </div>
+            <div class="form-group">
+              <label for="#assigneeSelect">Assignee</label>
+              <select class="form-control" id="assigneeSelect">
+                <option value="Myself" selected>Myself</option>
+                <option value="Peter">Peter</option>
+                <option value="Catalina">Catalina</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="#dueDateInput">Due Date</label>
+              <input
+                type="date"
+                class="form-control"
+                id="dueDateInput"
+                value="${this.taskDate.toString()}"
+              />
+              <div class="valid-feedback">Looks good!</div>
+              <div class="invalid-feedback">Please select your task due date</div>
+            </div>
+            <div class="form-group">
+              <label for="#statusSelect">Status</label>
+              <select class="form-control" id="statusSelect">
+                <option value="Not started" selected>Not started</option>
+                <option value="In progress">In progress</option>
+                <option value="Completed">Completed</option>
+                <option value="Overdue">Overdue</option>
+              </select>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-dismiss="modal"
+          >
+            Cancel
+          </button>
+          <button type="button" class="btn btn-primary" id="modal-submit-button">${
+            this.submitButton
+          }</button>
+        </div>
+      </div>
+    </div>
+  </div>`;
+
+    let modalElement = document
+      .createRange()
+      .createContextualFragment(modalHtml);
+
+    return modalElement;
+
+    // let modalTaskNameInput = modalElement.getElementById("taskNameInput");
+    // let modalTaskDetailInput = modalElement.getElementById("detailInput");
+    // let modalDateInput = modalElement.getElementById("dueDateInput");
+
+    // modalTaskNameInput.addEventListener("input", checkIfValidName);
+    // modalTaskDetailInput.addEventListener("input", checkIfValidDesc);
+    // modalDateInput.addEventListener("input", checkIfValidDate);
+  }
+
+  showModal() {
+    $(`#${this.modalId}`).modal("show");
+  }
+}
+
+const taskManager = new TaskManager("taskModal");
 
 taskManager.addTask(
   "Go to bank",
@@ -199,103 +392,96 @@ taskManager.addTask(
   "Not started"
 );
 
-taskManager.buildTaskTable();
+taskManager.buildTaskPlanner();
 
 // get the add task modal elements
-let modalButton = document.getElementById("addTaskModalButton");
-let modalTaskNameInput = document.getElementById("taskNameInput");
-modalTaskNameInput.classList.add("is-invalid");
-let modalTaskDetailInput = document.getElementById("detailInput");
-modalTaskDetailInput.classList.add("is-invalid");
-let modalAssigneeInput = document.getElementById("assigneeSelect");
-let modalDateInput = document.getElementById("dueDateInput");
-modalDateInput.classList.add("is-invalid");
-let modalStatusInput = document.getElementById("statusSelect");
+
+// const addTaskButton = document.querySelector("#addTaskButton");
+
+// addTaskButton.addEventListener("click", function () {
+//   $("#taskModal").modal("show");
+// });
 
 // validate task name input of modal
-function checkIfValidName(event) {
-  if (event.target.value && event.target.value.length >= 8) {
-    event.target.classList.remove("is-invalid");
-    event.target.classList.add("is-valid");
-  } else {
-    event.target.classList.remove("is-valid");
-    event.target.classList.add("is-invalid");
-  }
-}
+// function checkIfValidName(event) {
+//   if (event.target.value && event.target.value.length >= 8) {
+//     event.target.classList.remove("is-invalid");
+//     event.target.classList.add("is-valid");
+//   } else {
+//     event.target.classList.remove("is-valid");
+//     event.target.classList.add("is-invalid");
+//   }
+// }
 
-//validate task description input of modal
-function checkIfValidDesc(event) {
-  if (event.target.value && event.target.value.length >= 15) {
-    event.target.classList.remove("is-invalid");
-    event.target.classList.add("is-valid");
-  } else {
-    event.target.classList.remove("is-valid");
-    event.target.classList.add("is-invalid");
-  }
-}
+// //validate task description input of modal
+// function checkIfValidDesc(event) {
+//   if (event.target.value && event.target.value.length >= 15) {
+//     event.target.classList.remove("is-invalid");
+//     event.target.classList.add("is-valid");
+//   } else {
+//     event.target.classList.remove("is-valid");
+//     event.target.classList.add("is-invalid");
+//   }
+// }
 
-//validate task due date input of modal
-function checkIfValidDate(event) {
-  if (event.target.value) {
-    event.target.classList.remove("is-invalid");
-    event.target.classList.add("is-valid");
-  } else {
-    event.target.classList.remove("is-valid");
-    event.target.classList.add("is-invalid");
-  }
-}
-
-modalTaskNameInput.addEventListener("input", checkIfValidName);
-modalTaskDetailInput.addEventListener("input", checkIfValidDesc);
-modalDateInput.addEventListener("input", checkIfValidDate);
+// //validate task due date input of modal
+// function checkIfValidDate(event) {
+//   if (event.target.value) {
+//     event.target.classList.remove("is-invalid");
+//     event.target.classList.add("is-valid");
+//   } else {
+//     event.target.classList.remove("is-valid");
+//     event.target.classList.add("is-invalid");
+//   }
+// }
 
 // add a new task and refresh the task table when the modal is submitted
-modalButton.onclick = function () {
-  modalButton.setAttribute("data-dismiss", "modal");
-  if (
-    modalTaskNameInput.value.length < 8 ||
-    modalTaskDetailInput.value.length < 15 ||
-    modalDateInput.value === ""
-  ) {
-    modalButton.setAttribute("data-dismiss", "");
-  } else {
-    taskManager.addTask(
-      modalTaskNameInput.value,
-      modalTaskDetailInput.value,
-      modalAssigneeInput.value,
-      modalDateInput.value,
-      modalStatusInput.value
-    );
+// modalButton.onclick = function () {
+//   modalButton.setAttribute("data-dismiss", "modal");
+//   if (
+//     modalTaskNameInput.value.length < 8 ||
+//     modalTaskDetailInput.value.length < 15 ||
+//     modalDateInput.value === ""
+//   ) {
+//     modalButton.setAttribute("data-dismiss", "");
+//   } else {
+//     taskManager.addTask(
+//       modalTaskNameInput.value,
+//       modalTaskDetailInput.value,
+//       modalAssigneeInput.value,
+//       modalDateInput.value,
+//       modalStatusInput.value
+//     );
 
-    modalTaskNameInput.value = null;
-    modalTaskDetailInput.value = null;
-    modalAssigneeInput.value = "Myself";
-    modalDateInput.value = null;
-    modalStatusInput.value = "Not started";
+//     modalTaskNameInput.value = null;
+//     modalTaskDetailInput.value = null;
+//     modalAssigneeInput.value = "Myself";
+//     modalDateInput.value = null;
+//     modalStatusInput.value = "Not started";
 
-    modalTaskNameInput.classList.toggle("is-valid");
-    modalTaskDetailInput.classList.toggle("is-valid");
-    modalDateInput.classList.toggle("is-valid");
-    modalTaskNameInput.classList.toggle("is-invalid");
-    modalTaskDetailInput.classList.toggle("is-invalid");
-    modalDateInput.classList.toggle("is-invalid");
+//     modalTaskNameInput.classList.toggle("is-valid");
+//     modalTaskDetailInput.classList.toggle("is-valid");
+//     modalDateInput.classList.toggle("is-valid");
+//     modalTaskNameInput.classList.toggle("is-invalid");
+//     modalTaskDetailInput.classList.toggle("is-invalid");
+//     modalDateInput.classList.toggle("is-invalid");
 
-    taskManager.buildTaskTable();
-  }
-};
+//     taskManager.buildTaskTable();
+//   }
+// };
 
-deleteButtonClick = function () {
-  let checkBoxList = document.getElementsByClassName("checkbox");
+// deleteButtonClick = function () {
+//   let checkBoxList = document.getElementsByClassName("checkbox");
 
-  for (let i = 0; i < checkBoxList.length; i++) {
-    if (checkBoxList[i].checked == true) {
-      let id = checkBoxList[i].getAttribute("data-id");
-      taskManager.deleteTask(id);
-    }
-  }
+//   for (let i = 0; i < checkBoxList.length; i++) {
+//     if (checkBoxList[i].checked == true) {
+//       let id = checkBoxList[i].getAttribute("data-id");
+//       taskManager.deleteTask(id);
+//     }
+//   }
 
-  taskManager.buildTaskTable();
-};
+//   taskManager.buildTaskTable();
+// };
 
-let deletebutton = document.querySelector("#deletebutton");
-deletebutton.addEventListener("click", deleteButtonClick);
+// let deletebutton = document.querySelector("#deletebutton");
+// deletebutton.addEventListener("click", deleteButtonClick);

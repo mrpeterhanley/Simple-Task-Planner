@@ -1,12 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
+
 
     <!-- Bootstrap CSS -->
     <link
@@ -31,7 +23,7 @@
       
       <div class="d-flex flex-wrap align-items-center justify-content-center p-3">
         <div>
-          <button type="button" class="btn btn-success m-1" data-toggle="modal" data-target="#addTaskModal">Add Task</button>
+          <button type="button" id="addTaskButton" class="btn btn-success m-1" >Add Task</button> 
         
           <button type="button" class="btn btn-danger m-1" id="deletebutton">Delete Task</button>
         </div>
@@ -76,84 +68,7 @@
     </div>
   </div>
 
-    <div class="modal fade" id="addTaskModal" tabindex="-1" role="dialog">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">New Task</h5>
-            <button
-              type="button"
-              class="close"
-              data-dismiss="modal"
-              aria-label="Close"
-            >
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <form>
-              <div class="form-group">
-                <label for="#taskNameInput">Task Name</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="taskNameInput"
-                />
-                <div class="valid-feedback">Looks good!</div>
-                <div class="invalid-feedback">Task name should be a minimum of 8 characters</div>
-              </div>
-              <div class="form-group">
-                <label for="#detailInput">Task Details</label>
-                <textarea
-                  class="form-control"
-                  id="detailInput"
-                  rows="3"
-                ></textarea>
-                <div class="valid-feedback">Looks good!</div>
-                <div class="invalid-feedback">Task description should be a minimum of 15 characters</div>
-              </div>
-              <div class="form-group">
-                <label for="#assigneeSelect">Assignee</label>
-                <select class="form-control" id="assigneeSelect">
-                  <option value="Myself" selected>Myself</option>
-                  <option value="Peter">Peter</option>
-                  <option value="Catalina">Catalina</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label for="#dueDateInput">Due Date</label>
-                <input
-                  type="date"
-                  class="form-control"
-                  id="dueDateInput"
-                />
-                <div class="valid-feedback">Looks good!</div>
-                <div class="invalid-feedback">Please select your task due date</div>
-              </div>
-              <div class="form-group">
-                <label for="#statusSelect">Status</label>
-                <select class="form-control" id="statusSelect">
-                  <option value="Not started" selected>Not started</option>
-                  <option value="In progress">In progress</option>
-                  <option value="Completed">Completed</option>
-                  <option value="Overdue">Overdue</option>
-                </select>
-              </div>
-            </form>
-          </div>
-          <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-secondary"
-              data-dismiss="modal"
-            >
-              Cancel
-            </button>
-            <button type="button" class="btn btn-primary" id="addTaskModalButton" data-dismiss="modal">OK</button>
-          </div>
-        </div>
-      </div>
-    </div>
+  <div id="modalContainer"></div>
 
     <footer>Built with &hearts; by Catalina Gonzalez & Peter Hanley</footer>
     <!-- Optional JavaScript -->
