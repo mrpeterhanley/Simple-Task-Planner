@@ -19,7 +19,11 @@ class TaskManager {
   }
 
   getTask(id) {
-    return this.tasks[id];
+    for (let i = 0; i < this.tasks.length; i++) {
+      if (this.tasks[i].id == id) {
+        return this.tasks[i];
+      }
+    }
   }
 
   buildTaskPlanner() {
@@ -31,34 +35,37 @@ class TaskManager {
     // modalContainer.appendChild(modalElement);
 
     addTaskButton.addEventListener("click", (e) => {
-      // this.modal.taskName = "";
-      // this.modal.taskDetail = "";
-      // this.modal.taskDate = "";
-
       this.modal.modalTitle = "Add Task";
       this.modal.submitButton = "Add Task";
 
-      let modalElement = this.modal.buildModal();
+      let modalElement = this.modal.buildModal("", "", "", "");
+
       let modalContainer = document.querySelector("#modalContainer");
 
       let modalSubmitButton = modalElement.getElementById(
         "modal-submit-button"
       );
 
+      modalContainer.innerHTML = "";
+      modalContainer.appendChild(modalElement);
+
       modalSubmitButton.addEventListener("click", (e) => {
+        let taskName = document.getElementById("taskNameInput").value;
+        let taskDetails = document.getElementById("detailInput").value;
+        let taskAssignee = document.getElementById("assigneeSelect").value;
+        let taskDueDate = document.getElementById("dueDateInput").value;
+        let taskStatus = document.getElementById("statusSelect").value;
+
         this.addTask(
-          this.modal.taskName,
-          this.modal.taskDetail,
-          "Myself",
-          this.modal.taskDate,
-          "Not started"
+          taskName,
+          taskDetails,
+          taskAssignee,
+          taskDueDate,
+          taskStatus
         );
 
         this.refreshTaskPlanner();
       });
-
-      modalContainer.innerHTML = "";
-      modalContainer.appendChild(modalElement);
 
       this.modal.showModal(e);
     });
@@ -103,7 +110,6 @@ class TaskManager {
         this.modal.submitButton = "Update Task";
 
         let modalElement = this.modal.buildModal(
-          false,
           task.id,
           task.name,
           task.details,
@@ -283,21 +289,10 @@ class Modal {
   constructor(modalId) {
     this.modalId = modalId;
     this.modalTitle;
-    this.taskName = "";
-    this.taskDetail = "";
-    this.taskAssignee;
-    this.taskDate = new Date();
-    this.taskStatus = "Not started";
     this.submitButton;
   }
 
-  buildModal(
-    newTask = true,
-    taskId = null,
-    taskName = "",
-    taskDetails = "",
-    taskDate = ""
-  ) {
+  buildModal(taskId, name, details, duedate) {
     let modalHtml = `<div class="modal fade" id="${this.modalId}" tabindex="-1" role="dialog">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -320,7 +315,7 @@ class Modal {
                 type="text"
                 class="form-control"
                 id="taskNameInput"
-                value="${taskName}"
+                value="${name}"
               />
               <div class="valid-feedback">Looks good!</div>
               <div class="invalid-feedback">Task name should be a minimum of 8 characters</div>
@@ -331,7 +326,7 @@ class Modal {
                 class="form-control"
                 id="detailInput"
                 rows="3"
-              >${taskDetails}</textarea>
+              >${details}</textarea>
               <div class="valid-feedback">Looks good!</div>
               <div class="invalid-feedback">Task description should be a minimum of 15 characters</div>
             </div>
@@ -349,7 +344,7 @@ class Modal {
                 type="date"
                 class="form-control"
                 id="dueDateInput"
-                value="${taskDate}"
+                value="${duedate}"
               />
               <div class="valid-feedback">Looks good!</div>
               <div class="invalid-feedback">Please select your task due date</div>
