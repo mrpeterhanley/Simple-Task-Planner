@@ -28,6 +28,8 @@ class TaskManager {
         this.tasks[i].status = status;
       }
     }
+
+    this.refreshTaskPlanner();
   }
 
   getTask(id) {
@@ -112,8 +114,6 @@ class TaskManager {
 
     editButtons.forEach((editButton) => {
       editButton.addEventListener("click", (e) => {
-        console.log(e.target.getAttribute("data-id"));
-
         let taskId = e.target.getAttribute("data-id");
 
         let task = this.getTask(taskId);
@@ -283,7 +283,6 @@ class Task {
     let editBadge = this.buildBadge("Edit", "badge-info");
     editBadge.classList.add("editButton");
     editBadge.setAttribute("data-id", this.id);
-    console.log("task id" + this.id);
     col6.appendChild(editBadge);
 
     // add the buttons column to the row
@@ -508,7 +507,7 @@ taskManager.buildTaskPlanner();
 //       modalStatusInput.value
 //     );
 
-//     modalTaskNameInput.value = null;
+//     modalTaskNameInput.value = nulgit l;
 //     modalTaskDetailInput.value = null;
 //     modalAssigneeInput.value = "Myself";
 //     modalDateInput.value = null;
