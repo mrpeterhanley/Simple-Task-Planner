@@ -18,6 +18,18 @@ class TaskManager {
     this.tasks.push(task);
   }
 
+  updateTask(id, name, details, assignee, duedate, status) {
+    for (let i = 0; i < this.tasks.length; i++) {
+      if (this.tasks[i].id == id) {
+        this.tasks[i].name = name;
+        this.tasks[i].details = details;
+        this.tasks[i].assignee = assignee;
+        this.tasks[i].duedate = duedate;
+        this.tasks[i].status = status;
+      }
+    }
+  }
+
   getTask(id) {
     for (let i = 0; i < this.tasks.length; i++) {
       if (this.tasks[i].id == id) {
@@ -120,13 +132,26 @@ class TaskManager {
           "modal-submit-button"
         );
 
-        modalSubmitButton.addEventListener("click", (e) => {
-          console.log("Edit a current task:" + taskId);
-        });
-
         let modalContainer = document.querySelector("#modalContainer");
         modalContainer.innerHTML = "";
         modalContainer.appendChild(modalElement);
+
+        modalSubmitButton.addEventListener("click", (e) => {
+          let taskName = document.getElementById("taskNameInput").value;
+          let taskDetails = document.getElementById("detailInput").value;
+          let taskAssignee = document.getElementById("assigneeSelect").value;
+          let taskDueDate = document.getElementById("dueDateInput").value;
+          let taskStatus = document.getElementById("statusSelect").value;
+
+          this.updateTask(
+            taskId,
+            taskName,
+            taskDetails,
+            taskAssignee,
+            taskDueDate,
+            taskStatus
+          );
+        });
 
         this.modal.showModal(e);
       });
