@@ -1,8 +1,8 @@
 class TaskManager {
-  constructor(modalId) {
+  constructor(modalName) {
     this.tasks = [];
-    this.currentId = 0;
-    this.modal = new Modal(modalId);
+    this.currentId = 1;
+    this.modal = new Modal(modalName);
   }
 
   addTask(name, details, assignee, duedate, status) {
@@ -23,29 +23,44 @@ class TaskManager {
   }
 
   buildTaskPlanner() {
-    let modalElement = this.modal.buildModal();
-    let modalContainer = document.querySelector("#modalContainer");
-    modalContainer.innerHTML = "";
-    modalContainer.appendChild(modalElement);
-
     const addTaskButton = document.querySelector("#addTaskButton");
 
+    // let modalElement = this.modal.buildModal();
+    // let modalContainer = document.querySelector("#modalContainer");
+    // modalContainer.innerHTML = "";
+    // modalContainer.appendChild(modalElement);
+
     addTaskButton.addEventListener("click", (e) => {
-      this.modal.taskName = "";
-      this.modal.taskDetail = "";
-      this.modal.taskDate = "";
+      // this.modal.taskName = "";
+      // this.modal.taskDetail = "";
+      // this.modal.taskDate = "";
 
       this.modal.modalTitle = "Add Task";
       this.modal.submitButton = "Add Task";
 
-      this.modal.buildModal();
+      let modalElement = this.modal.buildModal();
+      let modalContainer = document.querySelector("#modalContainer");
+
+      let modalSubmitButton = modalElement.getElementById(
+        "modal-submit-button"
+      );
+
+      modalSubmitButton.addEventListener("click", (e) => {
+        this.addTask(
+          this.modal.taskName,
+          this.modal.taskDetail,
+          "Myself",
+          this.modal.taskDate,
+          "Not started"
+        );
+
+        this.refreshTaskPlanner();
+      });
+
+      modalContainer.innerHTML = "";
+      modalContainer.appendChild(modalElement);
+
       this.modal.showModal(e);
-    });
-
-    let modalSubmitButton = document.getElementById("modal-submit-button");
-
-    modalSubmitButton.addEventListener("click", (e) => {
-      console.log("You want to add or edit a task");
     });
 
     let deletebutton = document.querySelector("#deletebutton");
@@ -78,20 +93,35 @@ class TaskManager {
 
     editButtons.forEach((editButton) => {
       editButton.addEventListener("click", (e) => {
+        console.log(e.target.getAttribute("data-id"));
+
         let taskId = e.target.getAttribute("data-id");
 
         let task = this.getTask(taskId);
 
-        console.log(task.name);
-
-        this.modal.taskName = task.name;
-        this.modal.taskDetail = task.details;
-        this.modal.taskDate = task.duedate;
-
         this.modal.modalTitle = "Edit Task";
         this.modal.submitButton = "Update Task";
 
-        this.modal.buildModal();
+        let modalElement = this.modal.buildModal(
+          false,
+          task.id,
+          task.name,
+          task.details,
+          task.duedate
+        );
+
+        let modalSubmitButton = modalElement.getElementById(
+          "modal-submit-button"
+        );
+
+        modalSubmitButton.addEventListener("click", (e) => {
+          console.log("Edit a current task:" + taskId);
+        });
+
+        let modalContainer = document.querySelector("#modalContainer");
+        modalContainer.innerHTML = "";
+        modalContainer.appendChild(modalElement);
+
         this.modal.showModal(e);
       });
     });
@@ -222,6 +252,7 @@ class Task {
     let editBadge = this.buildBadge("Edit", "badge-info");
     editBadge.classList.add("editButton");
     editBadge.setAttribute("data-id", this.id);
+    console.log("task id" + this.id);
     col6.appendChild(editBadge);
 
     // add the buttons column to the row
@@ -251,27 +282,23 @@ class Task {
 class Modal {
   constructor(modalId) {
     this.modalId = modalId;
-    this.modalTitle = "Add Task";
+    this.modalTitle;
     this.taskName = "";
     this.taskDetail = "";
     this.taskAssignee;
     this.taskDate = new Date();
     this.taskStatus = "Not started";
-    this.submitButton = "Add Task";
+    this.submitButton;
   }
 
-  validate() {
-    if (this.taskName.length < 8 || this.taskDetail.length < 15) {
-      return false;
-    } else {
-      return true;
-    }
-  }
-
-  buildModal() {
-    let modalHtml = `<div class="modal fade" id="${
-      this.modalId
-    }" tabindex="-1" role="dialog">
+  buildModal(
+    newTask = true,
+    taskId = null,
+    taskName = "",
+    taskDetails = "",
+    taskDate = ""
+  ) {
+    let modalHtml = `<div class="modal fade" id="${this.modalId}" tabindex="-1" role="dialog">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -293,7 +320,7 @@ class Modal {
                 type="text"
                 class="form-control"
                 id="taskNameInput"
-                value="${this.taskName}"
+                value="${taskName}"
               />
               <div class="valid-feedback">Looks good!</div>
               <div class="invalid-feedback">Task name should be a minimum of 8 characters</div>
@@ -304,7 +331,7 @@ class Modal {
                 class="form-control"
                 id="detailInput"
                 rows="3"
-              >${this.taskDetail}</textarea>
+              >${taskDetails}</textarea>
               <div class="valid-feedback">Looks good!</div>
               <div class="invalid-feedback">Task description should be a minimum of 15 characters</div>
             </div>
@@ -322,7 +349,7 @@ class Modal {
                 type="date"
                 class="form-control"
                 id="dueDateInput"
-                value="${this.taskDate.toString()}"
+                value="${taskDate}"
               />
               <div class="valid-feedback">Looks good!</div>
               <div class="invalid-feedback">Please select your task due date</div>
@@ -346,9 +373,7 @@ class Modal {
           >
             Cancel
           </button>
-          <button type="button" class="btn btn-primary" id="modal-submit-button">${
-            this.submitButton
-          }</button>
+          <button type="button" class="btn btn-primary" id="modal-submit-button" data-dismiss="modal">${this.submitButton}</button>
         </div>
       </div>
     </div>
@@ -357,6 +382,16 @@ class Modal {
     let modalElement = document
       .createRange()
       .createContextualFragment(modalHtml);
+
+    // let modalSubmitButton = modalElement.getElementById("modal-submit-button");
+
+    // modalSubmitButton.addEventListener("click", (e) => {
+    //   if (newTask) {
+    //     console.log("Adding a new task");
+    //   } else {
+    //     console.log("Edit a current task:" + taskId);
+    //   }
+    // });
 
     return modalElement;
 
