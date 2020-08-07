@@ -58,13 +58,18 @@ class TaskManager {
         let taskDueDate = document.getElementById("dueDateInput").value;
         let taskStatus = document.getElementById("statusSelect").value;
 
-        this.addTask(
-          taskName,
-          taskDetails,
-          taskAssignee,
-          taskDueDate,
-          taskStatus
-        );
+        if (taskName.length < 8 || taskDetails.length < 15 || !taskDueDate) {
+          modalSubmitButton.setAttribute("data-dismiss", "");
+        } else {
+          modalSubmitButton.setAttribute("data-dismiss", "modal");
+          this.addTask(
+            taskName,
+            taskDetails,
+            taskAssignee,
+            taskDueDate,
+            taskStatus
+          );
+        }
 
         this.refreshTaskTable();
       });
@@ -114,7 +119,8 @@ class TaskManager {
           task.details,
           task.duedate,
           task.assignee,
-          task.status
+          task.status,
+          false
         );
 
         let modalSubmitButton = document.getElementById("modal-submit-button");
@@ -126,14 +132,19 @@ class TaskManager {
           let taskDueDate = document.getElementById("dueDateInput").value;
           let taskStatus = document.getElementById("statusSelect").value;
 
-          this.updateTask(
-            taskId,
-            taskName,
-            taskDetails,
-            taskAssignee,
-            taskDueDate,
-            taskStatus
-          );
+          if (taskName.length < 8 || taskDetails.length < 15 || !taskDueDate) {
+            modalSubmitButton.setAttribute("data-dismiss", "");
+          } else {
+            modalSubmitButton.setAttribute("data-dismiss", "modal");
+            this.updateTask(
+              taskId,
+              taskName,
+              taskDetails,
+              taskAssignee,
+              taskDueDate,
+              taskStatus
+            );
+          }
         });
 
         this.modal.showModal(e);
@@ -372,10 +383,10 @@ class Modal {
     details = "",
     duedate = "",
     assignee,
-    status = "Not started"
+    status = "Not started",
+    newTask = true
   ) {
     let taskStatus = new Status(status);
-
     let taskAssignee = new Assignee();
 
     let assigneeHtml = taskAssignee.getHtml(assignee);
@@ -403,6 +414,7 @@ class Modal {
                 type="text"
                 class="form-control"
                 id="taskNameInput"
+                minlength="8"
                 value="${name}"
               />
               <div class="valid-feedback">Looks good!</div>
@@ -414,6 +426,7 @@ class Modal {
                 class="form-control"
                 id="detailInput"
                 rows="3"
+                minlength="15"
               >${details}</textarea>
               <div class="valid-feedback">Looks good!</div>
               <div class="invalid-feedback">Task description should be a minimum of 15 characters</div>
@@ -461,22 +474,62 @@ class Modal {
       .createRange()
       .createContextualFragment(modalHtml);
 
+    let modalTaskNameInput = modalElement.getElementById("taskNameInput");
+    let modalTaskDetailInput = modalElement.getElementById("detailInput");
+    let modalDateInput = modalElement.getElementById("dueDateInput");
+
+    if (newTask == false) {
+      modalTaskNameInput.classList.add("is-valid");
+      modalTaskDetailInput.classList.add("is-valid");
+      modalDateInput.classList.add("is-valid");
+    } else {
+      modalTaskNameInput.classList.add("is-invalid");
+      modalTaskDetailInput.classList.add("is-invalid");
+      modalDateInput.classList.add("is-invalid");
+    }
+
+    modalTaskNameInput.addEventListener("input", this.checkIfValidName);
+    modalTaskDetailInput.addEventListener("input", this.checkIfValidDesc);
+    modalDateInput.addEventListener("input", this.checkIfValidDate);
+
     let modalContainer = document.querySelector("#modalContainer");
 
     modalContainer.innerHTML = "";
     modalContainer.appendChild(modalElement);
-
-    // let modalTaskNameInput = modalElement.getElementById("taskNameInput");
-    // let modalTaskDetailInput = modalElement.getElementById("detailInput");
-    // let modalDateInput = modalElement.getElementById("dueDateInput");
-
-    // modalTaskNameInput.addEventListener("input", checkIfValidName);
-    // modalTaskDetailInput.addEventListener("input", checkIfValidDesc);
-    // modalDateInput.addEventListener("input", checkIfValidDate);
   }
 
   showModal() {
     $(`#${this.modalId}`).modal("show");
+  }
+
+  checkIfValidName(event) {
+    if (event.target.value && event.target.value.length >= 8) {
+      event.target.classList.remove("is-invalid");
+      event.target.classList.add("is-valid");
+    } else {
+      event.target.classList.remove("is-valid");
+      event.target.classList.add("is-invalid");
+    }
+  }
+
+  checkIfValidDesc(event) {
+    if (event.target.value && event.target.value.length >= 15) {
+      event.target.classList.remove("is-invalid");
+      event.target.classList.add("is-valid");
+    } else {
+      event.target.classList.remove("is-valid");
+      event.target.classList.add("is-invalid");
+    }
+  }
+
+  checkIfValidDate(event) {
+    if (event.target.value) {
+      event.target.classList.remove("is-invalid");
+      event.target.classList.add("is-valid");
+    } else {
+      event.target.classList.remove("is-valid");
+      event.target.classList.add("is-invalid");
+    }
   }
 }
 
@@ -484,7 +537,7 @@ const taskManager = new TaskManager("taskModal");
 
 taskManager.addTask(
   "Go to bank",
-  "Withdraw $500",
+  "Withdraw $500 and apply for new credit card",
   "Peter",
   "2020-08-10",
   "Not started"
@@ -499,71 +552,3 @@ taskManager.addTask(
 );
 
 taskManager.buildTaskTable();
-
-// validate task name input of modal
-// function checkIfValidName(event) {
-//   if (event.target.value && event.target.value.length >= 8) {
-//     event.target.classList.remove("is-invalid");
-//     event.target.classList.add("is-valid");
-//   } else {
-//     event.target.classList.remove("is-valid");
-//     event.target.classList.add("is-invalid");
-//   }
-// }
-
-// //validate task description input of modal
-// function checkIfValidDesc(event) {
-//   if (event.target.value && event.target.value.length >= 15) {
-//     event.target.classList.remove("is-invalid");
-//     event.target.classList.add("is-valid");
-//   } else {
-//     event.target.classList.remove("is-valid");
-//     event.target.classList.add("is-invalid");
-//   }
-// }
-
-// //validate task due date input of modal
-// function checkIfValidDate(event) {
-//   if (event.target.value) {
-//     event.target.classList.remove("is-invalid");
-//     event.target.classList.add("is-valid");
-//   } else {
-//     event.target.classList.remove("is-valid");
-//     event.target.classList.add("is-invalid");
-//   }
-// }
-
-// add a new task and refresh the task table when the modal is submitted
-// modalButton.onclick = function () {
-//   modalButton.setAttribute("data-dismiss", "modal");
-//   if (
-//     modalTaskNameInput.value.length < 8 ||
-//     modalTaskDetailInput.value.length < 15 ||
-//     modalDateInput.value === ""
-//   ) {
-//     modalButton.setAttribute("data-dismiss", "");
-//   } else {
-//     taskManager.addTask(
-//       modalTaskNameInput.value,
-//       modalTaskDetailInput.value,
-//       modalAssigneeInput.value,
-//       modalDateInput.value,
-//       modalStatusInput.value
-//     );
-
-//     modalTaskNameInput.value = nulgit l;
-//     modalTaskDetailInput.value = null;
-//     modalAssigneeInput.value = "Myself";
-//     modalDateInput.value = null;
-//     modalStatusInput.value = "Not started";
-
-//     modalTaskNameInput.classList.toggle("is-valid");
-//     modalTaskDetailInput.classList.toggle("is-valid");
-//     modalDateInput.classList.toggle("is-valid");
-//     modalTaskNameInput.classList.toggle("is-invalid");
-//     modalTaskDetailInput.classList.toggle("is-invalid");
-//     modalDateInput.classList.toggle("is-invalid");
-
-//     taskManager.buildTaskTable();
-//   }
-// };
