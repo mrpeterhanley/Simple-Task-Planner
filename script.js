@@ -171,8 +171,10 @@ class Assignee {
   }
 
   addAssignee() {}
+  // add a name to the assignee list
 
   deleteAssignee() {}
+  // remove a name from the assignee list
 
   getHtml(assignee = "Myself") {
     let assigneeHtml = "";
