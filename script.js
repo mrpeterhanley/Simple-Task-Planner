@@ -221,7 +221,7 @@ class Task {
     let input = document.createElement("input");
     input.setAttribute("type", "checkbox");
     input.setAttribute("data-id", this.id);
-    input.classList.add("checkbox");
+    input.classList.add("checkbox", "m-1");
 
     let col1 = this.buildColumn();
     col1.appendChild(input);
