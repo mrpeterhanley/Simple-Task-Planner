@@ -52,22 +52,26 @@ class TaskManager {
       let modalSubmitButton = document.getElementById("modal-submit-button");
 
       modalSubmitButton.addEventListener("click", (e) => {
-        let taskName = document.getElementById("taskNameInput").value;
-        let taskDetails = document.getElementById("detailInput").value;
-        let taskAssignee = document.getElementById("assigneeSelect").value;
-        let taskDueDate = document.getElementById("dueDateInput").value;
-        let taskStatus = document.getElementById("statusSelect").value;
+        let taskName = document.getElementById("taskNameInput");
+        let taskDetails = document.getElementById("detailInput");
+        let taskAssignee = document.getElementById("assigneeSelect");
+        let taskDueDate = document.getElementById("dueDateInput");
+        let taskStatus = document.getElementById("statusSelect");
 
-        if (taskName.length < 8 || taskDetails.length < 15 || !taskDueDate) {
+        if (
+          !taskName.checkValidity() ||
+          !taskDetails.checkValidity() ||
+          !taskDueDate.checkValidity()
+        ) {
           modalSubmitButton.setAttribute("data-dismiss", "");
         } else {
           modalSubmitButton.setAttribute("data-dismiss", "modal");
           this.addTask(
-            taskName,
-            taskDetails,
-            taskAssignee,
-            taskDueDate,
-            taskStatus
+            taskName.value,
+            taskDetails.value,
+            taskAssignee.value,
+            taskDueDate.value,
+            taskStatus.value
           );
         }
 
@@ -126,23 +130,27 @@ class TaskManager {
         let modalSubmitButton = document.getElementById("modal-submit-button");
 
         modalSubmitButton.addEventListener("click", (e) => {
-          let taskName = document.getElementById("taskNameInput").value;
-          let taskDetails = document.getElementById("detailInput").value;
-          let taskAssignee = document.getElementById("assigneeSelect").value;
-          let taskDueDate = document.getElementById("dueDateInput").value;
-          let taskStatus = document.getElementById("statusSelect").value;
+          let taskName = document.getElementById("taskNameInput");
+          let taskDetails = document.getElementById("detailInput");
+          let taskAssignee = document.getElementById("assigneeSelect");
+          let taskDueDate = document.getElementById("dueDateInput");
+          let taskStatus = document.getElementById("statusSelect");
 
-          if (taskName.length < 8 || taskDetails.length < 15 || !taskDueDate) {
+          if (
+            !taskName.checkValidity() ||
+            !taskDetails.checkValidity() ||
+            !taskDueDate.checkValidity()
+          ) {
             modalSubmitButton.setAttribute("data-dismiss", "");
           } else {
             modalSubmitButton.setAttribute("data-dismiss", "modal");
             this.updateTask(
               taskId,
-              taskName,
-              taskDetails,
-              taskAssignee,
-              taskDueDate,
-              taskStatus
+              taskName.value,
+              taskDetails.value,
+              taskAssignee.value,
+              taskDueDate.value,
+              taskStatus.value
             );
           }
         });
@@ -415,7 +423,7 @@ class Modal {
                 class="form-control"
                 id="taskNameInput"
                 minlength="8"
-                value="${name}"
+                value="${name}" required
               />
               <div class="valid-feedback">Looks good!</div>
               <div class="invalid-feedback">Task name should be a minimum of 8 characters</div>
@@ -426,7 +434,7 @@ class Modal {
                 class="form-control"
                 id="detailInput"
                 rows="3"
-                minlength="15"
+                minlength="15" required
               >${details}</textarea>
               <div class="valid-feedback">Looks good!</div>
               <div class="invalid-feedback">Task description should be a minimum of 15 characters</div>
@@ -443,7 +451,7 @@ class Modal {
                 type="date"
                 class="form-control"
                 id="dueDateInput"
-                value="${duedate}"
+                value="${duedate}" required
               />
               <div class="valid-feedback">Looks good!</div>
               <div class="invalid-feedback">Please select your task due date</div>
@@ -488,9 +496,9 @@ class Modal {
       modalDateInput.classList.add("is-invalid");
     }
 
-    modalTaskNameInput.addEventListener("input", this.checkIfValidName);
-    modalTaskDetailInput.addEventListener("input", this.checkIfValidDesc);
-    modalDateInput.addEventListener("input", this.checkIfValidDate);
+    modalTaskNameInput.addEventListener("input", this.checkIfValidInput);
+    modalTaskDetailInput.addEventListener("input", this.checkIfValidInput);
+    modalDateInput.addEventListener("input", this.checkIfValidInput);
 
     let modalContainer = document.querySelector("#modalContainer");
 
@@ -502,28 +510,8 @@ class Modal {
     $(`#${this.modalId}`).modal("show");
   }
 
-  checkIfValidName(event) {
-    if (event.target.value && event.target.value.length >= 8) {
-      event.target.classList.remove("is-invalid");
-      event.target.classList.add("is-valid");
-    } else {
-      event.target.classList.remove("is-valid");
-      event.target.classList.add("is-invalid");
-    }
-  }
-
-  checkIfValidDesc(event) {
-    if (event.target.value && event.target.value.length >= 15) {
-      event.target.classList.remove("is-invalid");
-      event.target.classList.add("is-valid");
-    } else {
-      event.target.classList.remove("is-valid");
-      event.target.classList.add("is-invalid");
-    }
-  }
-
-  checkIfValidDate(event) {
-    if (event.target.value) {
+  checkIfValidInput(event) {
+    if (event.target.checkValidity()) {
       event.target.classList.remove("is-invalid");
       event.target.classList.add("is-valid");
     } else {
