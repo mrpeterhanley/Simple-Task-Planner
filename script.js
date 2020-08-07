@@ -29,7 +29,7 @@ class TaskManager {
       }
     }
 
-    this.refreshTaskPlanner();
+    this.refreshTaskTable();
   }
 
   getTask(id) {
@@ -40,28 +40,16 @@ class TaskManager {
     }
   }
 
-  buildTaskPlanner() {
+  buildTaskTable() {
     const addTaskButton = document.querySelector("#addTaskButton");
-
-    // let modalElement = this.modal.buildModal();
-    // let modalContainer = document.querySelector("#modalContainer");
-    // modalContainer.innerHTML = "";
-    // modalContainer.appendChild(modalElement);
 
     addTaskButton.addEventListener("click", (e) => {
       this.modal.modalTitle = "Add Task";
       this.modal.submitButton = "Add Task";
 
-      let modalElement = this.modal.buildModal("", "", "", "");
+      this.modal.buildModal("", "", "", "");
 
-      let modalContainer = document.querySelector("#modalContainer");
-
-      let modalSubmitButton = modalElement.getElementById(
-        "modal-submit-button"
-      );
-
-      modalContainer.innerHTML = "";
-      modalContainer.appendChild(modalElement);
+      let modalSubmitButton = document.getElementById("modal-submit-button");
 
       modalSubmitButton.addEventListener("click", (e) => {
         let taskName = document.getElementById("taskNameInput").value;
@@ -78,7 +66,7 @@ class TaskManager {
           taskStatus
         );
 
-        this.refreshTaskPlanner();
+        this.refreshTaskTable();
       });
 
       this.modal.showModal(e);
@@ -95,13 +83,13 @@ class TaskManager {
           this.deleteTask(id);
         }
       }
-      this.refreshTaskPlanner();
+      this.refreshTaskTable();
     });
 
-    this.refreshTaskPlanner();
+    this.refreshTaskTable();
   }
 
-  refreshTaskPlanner() {
+  refreshTaskTable() {
     let taskTableBody = document.querySelector("#taskTableBody");
 
     taskTableBody.innerHTML = "";
@@ -121,20 +109,9 @@ class TaskManager {
         this.modal.modalTitle = "Edit Task";
         this.modal.submitButton = "Update Task";
 
-        let modalElement = this.modal.buildModal(
-          task.id,
-          task.name,
-          task.details,
-          task.duedate
-        );
+        this.modal.buildModal(task.id, task.name, task.details, task.duedate);
 
-        let modalSubmitButton = modalElement.getElementById(
-          "modal-submit-button"
-        );
-
-        let modalContainer = document.querySelector("#modalContainer");
-        modalContainer.innerHTML = "";
-        modalContainer.appendChild(modalElement);
+        let modalSubmitButton = document.getElementById("modal-submit-button");
 
         modalSubmitButton.addEventListener("click", (e) => {
           let taskName = document.getElementById("taskNameInput").value;
@@ -402,17 +379,10 @@ class Modal {
       .createRange()
       .createContextualFragment(modalHtml);
 
-    // let modalSubmitButton = modalElement.getElementById("modal-submit-button");
+    let modalContainer = document.querySelector("#modalContainer");
 
-    // modalSubmitButton.addEventListener("click", (e) => {
-    //   if (newTask) {
-    //     console.log("Adding a new task");
-    //   } else {
-    //     console.log("Edit a current task:" + taskId);
-    //   }
-    // });
-
-    return modalElement;
+    modalContainer.innerHTML = "";
+    modalContainer.appendChild(modalElement);
 
     // let modalTaskNameInput = modalElement.getElementById("taskNameInput");
     // let modalTaskDetailInput = modalElement.getElementById("detailInput");
@@ -446,15 +416,7 @@ taskManager.addTask(
   "Not started"
 );
 
-taskManager.buildTaskPlanner();
-
-// get the add task modal elements
-
-// const addTaskButton = document.querySelector("#addTaskButton");
-
-// addTaskButton.addEventListener("click", function () {
-//   $("#taskModal").modal("show");
-// });
+taskManager.buildTaskTable();
 
 // validate task name input of modal
 // function checkIfValidName(event) {
@@ -523,19 +485,3 @@ taskManager.buildTaskPlanner();
 //     taskManager.buildTaskTable();
 //   }
 // };
-
-// deleteButtonClick = function () {
-//   let checkBoxList = document.getElementsByClassName("checkbox");
-
-//   for (let i = 0; i < checkBoxList.length; i++) {
-//     if (checkBoxList[i].checked == true) {
-//       let id = checkBoxList[i].getAttribute("data-id");
-//       taskManager.deleteTask(id);
-//     }
-//   }
-
-//   taskManager.buildTaskTable();
-// };
-
-// let deletebutton = document.querySelector("#deletebutton");
-// deletebutton.addEventListener("click", deleteButtonClick);
