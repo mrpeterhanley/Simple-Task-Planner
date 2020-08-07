@@ -113,6 +113,7 @@ class TaskManager {
           task.name,
           task.details,
           task.duedate,
+          task.assignee,
           task.status
         );
 
@@ -145,12 +146,36 @@ class TaskManager {
   }
 }
 
+class Assignee {
+  constructor() {
+    this.assigneeList = ["Myself", "Peter", "Catalina"];
+  }
+
+  addAssignee() {}
+
+  deleteAssignee() {}
+
+  getHtml(assignee = "Myself") {
+    let assigneeHtml = "";
+
+    for (let i = 0; i < this.assigneeList.length; i++) {
+      if (assignee == this.assigneeList[i]) {
+        assigneeHtml += `<option value="${this.assigneeList[i]}" selected>${this.assigneeList[i]}</option>`;
+      } else {
+        assigneeHtml += `<option value="${this.assigneeList[i]}">${this.assigneeList[i]}</option>`;
+      }
+    }
+
+    return assigneeHtml;
+  }
+}
+
 class Status {
   constructor(status) {
     this.status = status;
   }
 
-  getStatusHtml() {
+  getHtml() {
     let statusHtml;
 
     switch (this.status) {
@@ -208,7 +233,7 @@ class Task {
 
   buildBadge(text, badgeClass = "badge-secondary") {
     let badge = document.createElement("span");
-    badge.classList.add("badge");
+    badge.classList.add("badge", "m-1");
     badge.classList.add(badgeClass);
     badge.innerHTML = text;
     return badge;
@@ -221,7 +246,7 @@ class Task {
     let input = document.createElement("input");
     input.setAttribute("type", "checkbox");
     input.setAttribute("data-id", this.id);
-    input.classList.add("checkbox");
+    input.classList.add("checkbox", "m-1");
 
     let col1 = this.buildColumn();
     col1.appendChild(input);
@@ -342,10 +367,19 @@ class Modal {
     this.submitButton;
   }
 
-  buildModal(name = "", details = "", duedate = "", status = "Not started") {
+  buildModal(
+    name = "",
+    details = "",
+    duedate = "",
+    assignee,
+    status = "Not started"
+  ) {
     let taskStatus = new Status(status);
 
-    let statusHtml = taskStatus.getStatusHtml();
+    let taskAssignee = new Assignee();
+
+    let assigneeHtml = taskAssignee.getHtml(assignee);
+    let statusHtml = taskStatus.getHtml();
 
     let modalHtml = `<div class="modal fade" id="${this.modalId}" tabindex="-1" role="dialog">
     <div class="modal-dialog">
@@ -387,9 +421,7 @@ class Modal {
             <div class="form-group">
               <label for="#assigneeSelect">Assignee</label>
               <select class="form-control" id="assigneeSelect">
-                <option value="Myself" selected>Myself</option>
-                <option value="Peter">Peter</option>
-                <option value="Catalina">Catalina</option>
+              ${assigneeHtml}
               </select>
             </div>
             <div class="form-group">
