@@ -47,7 +47,7 @@ class TaskManager {
       this.modal.modalTitle = "Add Task";
       this.modal.submitButton = "Add Task";
 
-      this.modal.buildModal("", "", "", "");
+      this.modal.buildModal();
 
       let modalSubmitButton = document.getElementById("modal-submit-button");
 
@@ -109,7 +109,12 @@ class TaskManager {
         this.modal.modalTitle = "Edit Task";
         this.modal.submitButton = "Update Task";
 
-        this.modal.buildModal(task.id, task.name, task.details, task.duedate);
+        this.modal.buildModal(
+          task.name,
+          task.details,
+          task.duedate,
+          task.status
+        );
 
         let modalSubmitButton = document.getElementById("modal-submit-button");
 
@@ -137,6 +142,50 @@ class TaskManager {
 
   deleteTask(id) {
     this.tasks = this.tasks.filter((task) => task.id != id);
+  }
+}
+
+class Status {
+  constructor(status) {
+    this.status = status;
+  }
+
+  getStatusHtml() {
+    let statusHtml;
+
+    switch (this.status) {
+      case "In progress":
+        statusHtml = `<option value="Not started">Not started</option>
+        <option value="In progress" selected>In progress</option>
+        <option value="Completed">Completed</option>
+        <option value="Overdue">Overdue</option>`;
+
+        return statusHtml;
+
+      case "Completed":
+        statusHtml = `<option value="Not started">Not started</option>
+        <option value="In progress">In progress</option>
+        <option value="Completed" selected>Completed</option>
+        <option value="Overdue">Overdue</option>`;
+
+        return statusHtml;
+
+      case "Overdue":
+        statusHtml = `<option value="Not started">Not started</option>
+        <option value="In progress">In progress</option>
+        <option value="Completed">Completed</option>
+        <option value="Overdue" selected>Overdue</option>`;
+
+        return statusHtml;
+
+      default:
+        statusHtml = `<option value="Not started" selected>Not started</option>
+        <option value="In progress">In progress</option>
+        <option value="Completed">Completed</option>
+        <option value="Overdue">Overdue</option>`;
+
+        return statusHtml;
+    }
   }
 }
 
@@ -293,7 +342,11 @@ class Modal {
     this.submitButton;
   }
 
-  buildModal(taskId, name, details, duedate) {
+  buildModal(name = "", details = "", duedate = "", status = "Not started") {
+    let taskStatus = new Status(status);
+
+    let statusHtml = taskStatus.getStatusHtml();
+
     let modalHtml = `<div class="modal fade" id="${this.modalId}" tabindex="-1" role="dialog">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -353,10 +406,7 @@ class Modal {
             <div class="form-group">
               <label for="#statusSelect">Status</label>
               <select class="form-control" id="statusSelect">
-                <option value="Not started" selected>Not started</option>
-                <option value="In progress">In progress</option>
-                <option value="Completed">Completed</option>
-                <option value="Overdue">Overdue</option>
+                ${statusHtml}
               </select>
             </div>
           </form>
