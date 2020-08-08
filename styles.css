@@ -17,6 +17,14 @@ td {
   white-space: nowrap;
 }
 
+.dropdown-toggle {
+  cursor: grabbing;
+}
+
+.editButton {
+  cursor: alias;
+}
+
 body {
   display: flex;
   flex-direction: column;
