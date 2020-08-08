@@ -1,8 +1,9 @@
 class TaskManager {
-  constructor(modalName) {
+  constructor(name) {
     this.tasks = [];
     this.currentId = 1;
-    this.modal = new Modal(modalName);
+    this.assigneeList = new AssigneeList();
+    this.modal = new Modal(name, this.assigneeList);
   }
 
   addTask(name, details, assignee, duedate, status) {
@@ -44,10 +45,11 @@ class TaskManager {
     const addTaskButton = document.querySelector("#addTaskButton");
 
     addTaskButton.addEventListener("click", (e) => {
-      this.modal.modalTitle = "Add Task";
-      this.modal.submitButton = "Add Task";
-
-      this.modal.buildModal();
+      this.modal.buildTaskModal(
+        this.assigneeList.list[0],
+        "Add Task",
+        "Add Task"
+      );
 
       let modalSubmitButton = document.getElementById("modal-submit-button");
 
@@ -78,7 +80,7 @@ class TaskManager {
         this.refreshTaskTable();
       });
 
-      this.modal.showModal(e);
+      this.modal.showTaskModal(e);
     });
 
     let deletebutton = document.querySelector("#deletebutton");
@@ -93,6 +95,24 @@ class TaskManager {
         }
       }
       this.refreshTaskTable();
+    });
+
+    let addModalDropDown = document.querySelector("#addAssigneeDropDown");
+
+    addModalDropDown.addEventListener("click", (e) => {
+      this.modal.buildAssigneeModal();
+
+      this.modal.showAssigneeModal();
+
+      let assigneeSubmitButton = document.querySelector(
+        "#assignee-submit-button"
+      );
+
+      assigneeSubmitButton.addEventListener("click", (e) => {
+        let newAssigneeName = document.querySelector("#assigneeInput").value;
+
+        this.assigneeList.addAssignee(newAssigneeName);
+      });
     });
 
     this.refreshTaskTable();
@@ -115,14 +135,13 @@ class TaskManager {
 
         let task = this.getTask(taskId);
 
-        this.modal.modalTitle = "Edit Task";
-        this.modal.submitButton = "Update Task";
-
-        this.modal.buildModal(
+        this.modal.buildTaskModal(
+          task.assignee,
+          "Edit Task",
+          "Update Task",
           task.name,
           task.details,
           task.duedate,
-          task.assignee,
           task.status,
           false
         );
@@ -155,7 +174,7 @@ class TaskManager {
           }
         });
 
-        this.modal.showModal(e);
+        this.modal.showTaskModal(e);
       });
     });
   }
@@ -165,25 +184,27 @@ class TaskManager {
   }
 }
 
-class Assignee {
+class AssigneeList {
   constructor() {
-    this.assigneeList = ["Myself", "Peter", "Catalina"];
+    this.list = ["Myself", "Peter", "Catalina"];
   }
 
-  addAssignee() {}
-  // add a name to the assignee list
-
-  deleteAssignee() {}
-  // remove a name from the assignee list
-
-  getHtml(assignee = "Myself") {
+  addAssignee(assignee) {
+    // add a name to the assignee list
+    this.list.push(assignee);
+  }
+  deleteAssignee(assignee) {
+    // remove a name from the assignee list
+    this.list = this.list.filter((assignee) => list[assignee] != assignee);
+  }
+  getHtml(assignee) {
     let assigneeHtml = "";
 
-    for (let i = 0; i < this.assigneeList.length; i++) {
-      if (assignee == this.assigneeList[i]) {
-        assigneeHtml += `<option value="${this.assigneeList[i]}" selected>${this.assigneeList[i]}</option>`;
+    for (let i = 0; i < this.list.length; i++) {
+      if (assignee == this.list[i]) {
+        assigneeHtml += `<option value="${this.list[i]}" selected>${this.list[i]}</option>`;
       } else {
-        assigneeHtml += `<option value="${this.assigneeList[i]}">${this.assigneeList[i]}</option>`;
+        assigneeHtml += `<option value="${this.list[i]}">${this.list[i]}</option>`;
       }
     }
 
@@ -382,31 +403,92 @@ class Task {
 }
 
 class Modal {
-  constructor(modalId) {
-    this.modalId = modalId;
-    this.modalTitle;
+  constructor(name, assigneeList) {
+    this.taskModalId = `${name}-task-modal`;
+    this.assigneeModalId = `${name}-assignee-modal`;
+    this.assigneeList = assigneeList;
+    this.taskModalTitle;
     this.submitButton;
   }
 
-  buildModal(
+  buildAssigneeModal() {
+    let modalHtml = `<div class="modal fade" id="${this.assigneeModalId}" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Add Assignee</h5>
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <div class="form-group">
+              <label for="#assigneeInput">Assignee Name</label>
+              <input
+                type="text"
+                class="form-control"
+                id="assigneeInput"
+                value=""
+              />
+              <div class="valid-feedback">Looks good!</div>
+              <div class="invalid-feedback">Task name should be a minimum of 8 characters</div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-dismiss="modal"
+          >
+            Cancel
+          </button>
+          <button type="button" class="btn btn-primary" id="assignee-submit-button" data-dismiss="modal">Add Assignee</button>
+        </div>
+      </div>
+    </div>
+  </div>`;
+
+    let modalElement = document
+      .createRange()
+      .createContextualFragment(modalHtml);
+
+    let modalContainer = document.querySelector("#modalContainer");
+
+    modalContainer.innerHTML = "";
+    modalContainer.appendChild(modalElement);
+  }
+
+  showAssigneeModal() {
+    $(`#${this.assigneeModalId}`).modal("show");
+  }
+
+  buildTaskModal(
+    selectedAssignee,
+    modalTitle,
+    submitButtonTitle,
     name = "",
     details = "",
     duedate = "",
-    assignee,
     status = "Not started",
     newTask = true
   ) {
     let taskStatus = new Status(status);
-    let taskAssignee = new Assignee();
 
-    let assigneeHtml = taskAssignee.getHtml(assignee);
+    let assigneeHtml = this.assigneeList.getHtml(selectedAssignee);
     let statusHtml = taskStatus.getHtml();
 
-    let modalHtml = `<div class="modal fade" id="${this.modalId}" tabindex="-1" role="dialog">
+    let modalHtml = `<div class="modal fade" id="${this.taskModalId}" tabindex="-1" role="dialog">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">${this.modalTitle}</h5>
+          <h5 class="modal-title">${modalTitle}</h5>
           <button
             type="button"
             class="close"
@@ -474,7 +556,7 @@ class Modal {
           >
             Cancel
           </button>
-          <button type="button" class="btn btn-primary" id="modal-submit-button" data-dismiss="modal">${this.submitButton}</button>
+          <button type="button" class="btn btn-primary" id="modal-submit-button" data-dismiss="modal">${submitButtonTitle}</button>
         </div>
       </div>
     </div>
@@ -508,8 +590,8 @@ class Modal {
     modalContainer.appendChild(modalElement);
   }
 
-  showModal() {
-    $(`#${this.modalId}`).modal("show");
+  showTaskModal() {
+    $(`#${this.taskModalId}`).modal("show");
   }
 
   checkIfValidInput(event) {
@@ -523,7 +605,7 @@ class Modal {
   }
 }
 
-const taskManager = new TaskManager("taskModal");
+const taskManager = new TaskManager("personal-tasks");
 
 taskManager.addTask(
   "Go to bank",
