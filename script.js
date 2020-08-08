@@ -97,21 +97,46 @@ class TaskManager {
       this.refreshTaskTable();
     });
 
-    let addModalDropDown = document.querySelector("#addAssigneeDropDown");
+    let addAssigneeDropDown = document.querySelector("#addAssigneeDropDown");
 
-    addModalDropDown.addEventListener("click", (e) => {
-      this.modal.buildAssigneeModal();
+    addAssigneeDropDown.addEventListener("click", (e) => {
+      this.modal.buildAddAssigneeModal();
 
-      this.modal.showAssigneeModal();
+      this.modal.showAddAssigneeModal();
 
       let assigneeSubmitButton = document.querySelector(
-        "#assignee-submit-button"
+        "#add-assignee-submit-button"
       );
 
       assigneeSubmitButton.addEventListener("click", (e) => {
-        let newAssigneeName = document.querySelector("#assigneeInput").value;
+        let assignee = document.querySelector("#addAssigneeInput").value;
 
-        this.assigneeList.addAssignee(newAssigneeName);
+        this.assigneeList.addAssignee(assignee);
+      });
+    });
+
+    let deleteAssigneeDropDown = document.querySelector(
+      "#deleteAssigneeDropDown"
+    );
+
+    deleteAssigneeDropDown.addEventListener("click", (e) => {
+      this.modal.buildDeleteAssigneeModal();
+
+      this.modal.showDeleteAssigneeModal();
+
+      let assigneeSubmitButton = document.querySelector(
+        "#delete-assignee-submit-button"
+      );
+
+      assigneeSubmitButton.addEventListener("click", (e) => {
+        let assigneeInput = document.querySelector("#deleteAssigneeInput");
+
+        if (this.assigneeList.list.length <= 1) {
+          assigneeInput.classList.add("is-invalid");
+          assigneeSubmitButton.setAttribute("data-dismiss", "");
+        } else {
+          this.assigneeList.deleteAssignee(assigneeInput.value);
+        }
       });
     });
 
@@ -186,7 +211,7 @@ class TaskManager {
 
 class AssigneeList {
   constructor() {
-    this.list = ["Myself", "Peter", "Catalina"];
+    this.list = ["Peter", "Catalina"];
   }
 
   addAssignee(assignee) {
@@ -195,7 +220,14 @@ class AssigneeList {
   }
   deleteAssignee(assignee) {
     // remove a name from the assignee list
-    this.list = this.list.filter((assignee) => list[assignee] != assignee);
+
+    // this.list = this.list.filter((assignee) => this.list[assignee] != assignee);
+
+    for (let i = 0; i < this.list.length; i++) {
+      if (this.list[i] == assignee) {
+        this.list.splice(i, 1);
+      }
+    }
   }
   getHtml(assignee) {
     let assigneeHtml = "";
@@ -405,14 +437,15 @@ class Task {
 class Modal {
   constructor(name, assigneeList) {
     this.taskModalId = `${name}-task-modal`;
-    this.assigneeModalId = `${name}-assignee-modal`;
+    this.addAssigneeModalId = `${name}-add-assignee-modal`;
+    this.deleteAssigneeModalId = `${name}-delete-assignee-modal`;
     this.assigneeList = assigneeList;
     this.taskModalTitle;
     this.submitButton;
   }
 
-  buildAssigneeModal() {
-    let modalHtml = `<div class="modal fade" id="${this.assigneeModalId}" tabindex="-1" role="dialog">
+  buildAddAssigneeModal() {
+    let modalHtml = `<div class="modal fade" id="${this.addAssigneeModalId}" tabindex="-1" role="dialog">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -433,7 +466,7 @@ class Modal {
               <input
                 type="text"
                 class="form-control"
-                id="assigneeInput"
+                id="addAssigneeInput"
                 value=""
               />
               <div class="valid-feedback">Looks good!</div>
@@ -449,7 +482,7 @@ class Modal {
           >
             Cancel
           </button>
-          <button type="button" class="btn btn-primary" id="assignee-submit-button" data-dismiss="modal">Add Assignee</button>
+          <button type="button" class="btn btn-primary" id="add-assignee-submit-button" data-dismiss="modal">Add Assignee</button>
         </div>
       </div>
     </div>
@@ -465,8 +498,64 @@ class Modal {
     modalContainer.appendChild(modalElement);
   }
 
-  showAssigneeModal() {
-    $(`#${this.assigneeModalId}`).modal("show");
+  showAddAssigneeModal() {
+    $(`#${this.addAssigneeModalId}`).modal("show");
+  }
+
+  buildDeleteAssigneeModal() {
+    let assigneeHtml = this.assigneeList.getHtml(this.assigneeList[0]);
+
+    let modalHtml = `<div class="modal fade" id="${this.deleteAssigneeModalId}" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Delete Assignee</h5>
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <div class="form-group">
+              <label for="#assigneeSelect">Assignee</label>
+              <select class="form-control" id="deleteAssigneeInput">
+              ${assigneeHtml}
+              </select>
+              <div class="invalid-feedback">Your task planner should have at least 1 assignee!</div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-dismiss="modal"
+          >
+            Cancel
+          </button>
+          <button type="button" class="btn btn-primary" id="delete-assignee-submit-button" data-dismiss="modal">Delete Assignee</button>
+        </div>
+      </div>
+    </div>
+  </div>`;
+
+    let modalElement = document
+      .createRange()
+      .createContextualFragment(modalHtml);
+
+    let modalContainer = document.querySelector("#modalContainer");
+
+    modalContainer.innerHTML = "";
+    modalContainer.appendChild(modalElement);
+  }
+
+  showDeleteAssigneeModal() {
+    $(`#${this.deleteAssigneeModalId}`).modal("show");
   }
 
   buildTaskModal(
