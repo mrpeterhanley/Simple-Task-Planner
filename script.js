@@ -307,8 +307,7 @@ class Task {
 
   buildBadge(text, badgeClass = "badge-secondary") {
     let badge = document.createElement("span");
-    badge.classList.add("badge", "m-1");
-    badge.classList.add(badgeClass);
+    badge.classList.add("badge", "m-1", badgeClass);
     badge.innerHTML = text;
     return badge;
   }
