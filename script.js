@@ -427,29 +427,10 @@ class Task {
     let col8 = this.buildColumn();
     col8.setAttribute("colspan", "5");
     col8.innerHTML = this.details;
-    this.truncate(col8, 7, "...");
     newTaskDetailRow.appendChild(col8);
 
     parentElement.appendChild(newTaskRow);
     parentElement.appendChild(newTaskDetailRow);
-  }
-
-  truncate(elem, limit, after) {
-    if (!elem || !limit) return;
-
-    // Get the inner content of the element
-    var content = elem.textContent.trim();
-
-    // Convert the content into an array of words
-    // Remove any words above the limit
-    content = content.split(" ").slice(0, limit);
-
-    // Convert the array of words back into a string
-    // If there's content to add after it, add it
-    content = content.join(" ") + (after ? after : "");
-
-    // Inject the content back into the DOM
-    elem.textContent = content;
   }
 }
 
