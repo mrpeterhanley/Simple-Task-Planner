@@ -10,6 +10,21 @@ footer {
   color: white;
 }
 
+td {
+  max-width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dropdown-toggle {
+  cursor: grabbing;
+}
+
+.editButton {
+  cursor: alias;
+}
+
 body {
   display: flex;
   flex-direction: column;
