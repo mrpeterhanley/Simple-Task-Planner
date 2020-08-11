@@ -2,41 +2,62 @@ class TaskManager {
   constructor(name) {
     this.tasks = [];
     this.currentId = 1;
+
     this.assigneeList = new AssigneeList();
     this.modal = new Modal(name, this.assigneeList);
   }
 
   saveToStorage() {
+    console.log("Saving " + JSON.stringify(this.tasks));
     localStorage.setItem("tasks", JSON.stringify(this.tasks));
-    localStorage.setItem("currentID", this.currentId);
+    localStorage.setItem("currentId", this.currentId);
     localStorage.setItem("assigneeList", JSON.stringify(this.assigneeList));
   }
 
   loadFromStorage() {
-    const storageTasks = JSON.parse(localStorage.getItem("tasks")) || [];
-    this.tasks = storageTasks.map(
-      (task) =>
-        new Task(
-          task.currentId,
-          task.name,
-          task.details,
-          task.assignee,
-          task.duedate,
-          task.status
-        )
-    );
-    this.currentId = localStorage.getItem("currentID") || 1;
+    if (localStorage.getItem("tasks")) {
+      console.log("Storage exists. Loading from storage");
 
-    const storageAssignees =
-      JSON.parse(localStorage.getItem("assigneeList")) || null;
+      const storageTasks = JSON.parse(localStorage.getItem("tasks"));
+      this.tasks = storageTasks.map(
+        (task) =>
+          new Task(
+            task.id,
+            task.name,
+            task.details,
+            task.assignee,
+            task.duedate,
+            task.status
+          )
+      );
 
-    if (storageAssignees) {
+      this.currentId = localStorage.getItem("currentId");
+
+      const storageAssignees = JSON.parse(localStorage.getItem("assigneeList"));
+
       storageAssignees.list.forEach((assignee) =>
         this.assigneeList.addAssignee(assignee)
       );
     } else {
+      console.log("No storage exists. creating some sample tasks & assignees");
+
       this.assigneeList.addAssignee("Peter");
       this.assigneeList.addAssignee("Catalina");
+
+      this.addTask(
+        "Sample Task 1",
+        "Withdraw $500 and apply for credit card",
+        this.assigneeList.list[0],
+        "2020-08-11",
+        "Not started"
+      );
+      taskManager.addTask(
+        "Sample Task 2",
+        "Go to Woolworths to buy groceries: vegetables, fruit, toilet paper",
+        this.assigneeList.list[1],
+        "2020-08-12",
+        "Not started"
+      );
     }
   }
 
@@ -74,6 +95,8 @@ class TaskManager {
   }
 
   buildTaskTable() {
+    this.loadFromStorage();
+
     const addTaskButton = document.querySelector("#addTaskButton");
 
     addTaskButton.addEventListener("click", (e) => {
@@ -608,7 +631,7 @@ class Modal {
     newTask = true
   ) {
     let taskStatus = new Status(status);
-
+    console.log("Selected Assignee " + selectedAssignee);
     let assigneeHtml = this.assigneeList.getHtml(selectedAssignee);
     let statusHtml = taskStatus.getHtml();
 
@@ -734,24 +757,5 @@ class Modal {
 }
 
 const taskManager = new TaskManager("personal-tasks");
-
-taskManager.loadFromStorage();
-
-if (!localStorage.getItem("tasks")) {
-  taskManager.addTask(
-    "Sample Task 1",
-    "Withdraw $500 and apply for credit card",
-    "Catalina",
-    "2020-08-11",
-    "Not started"
-  );
-  taskManager.addTask(
-    "Sample Task 2",
-    "Go to Woolworths to buy groceries: vegetables, fruit, toilet paper",
-    "Peter",
-    "2020-08-12",
-    "Not started"
-  );
-}
 
 taskManager.buildTaskTable();
