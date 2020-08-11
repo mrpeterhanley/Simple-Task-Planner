@@ -10,6 +10,10 @@ footer {
   color: white;
 }
 
+.center {
+  text-align: center;
+}
+
 .truncate {
   max-width: 100px;
   overflow: hidden;

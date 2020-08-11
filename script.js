@@ -406,9 +406,10 @@ class Task {
     this.status = status;
   }
 
-  buildColumn() {
+  buildColumn(alignment) {
     let col = document.createElement("td");
     col.setAttribute("scope", "col");
+    col.classList.add(alignment);
     return col;
   }
 
@@ -428,7 +429,7 @@ class Task {
     input.setAttribute("data-id", this.id);
     input.classList.add("checkbox", "m-1");
 
-    let col1 = this.buildColumn();
+    let col1 = this.buildColumn("center");
     col1.appendChild(input);
     newTaskRow.appendChild(col1);
 
@@ -439,7 +440,7 @@ class Task {
     newTaskRow.appendChild(col2);
 
     // create the task assignee column
-    let col3 = this.buildColumn();
+    let col3 = this.buildColumn("center");
     col3.appendChild(this.buildBadge(this.assignee));
     newTaskRow.appendChild(col3);
 
@@ -470,7 +471,7 @@ class Task {
       dueDateBadge = this.buildBadge(this.duedate);
     }
 
-    let col4 = this.buildColumn();
+    let col4 = this.buildColumn("center");
     col4.appendChild(dueDateBadge);
     newTaskRow.appendChild(col4);
 
@@ -494,7 +495,7 @@ class Task {
     }
 
     // add task status badge to the column, add column to the row
-    let col5 = this.buildColumn();
+    let col5 = this.buildColumn("center");
     col5.appendChild(statusBadge);
     newTaskRow.appendChild(col5);
 
@@ -507,7 +508,7 @@ class Task {
     detailBadge.setAttribute("data-target", "#" + this.detailId);
 
     //add the detail button to the column
-    let col6 = this.buildColumn();
+    let col6 = this.buildColumn("center");
     col6.appendChild(detailBadge);
 
     //add the edit button to the column
