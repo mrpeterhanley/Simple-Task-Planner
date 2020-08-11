@@ -6,6 +6,40 @@ class TaskManager {
     this.modal = new Modal(name, this.assigneeList);
   }
 
+  saveToStorage() {
+    localStorage.setItem("tasks", JSON.stringify(this.tasks));
+    localStorage.setItem("currentID", this.currentId);
+    localStorage.setItem("assigneeList", JSON.stringify(this.assigneeList));
+  }
+
+  loadFromStorage() {
+    const storageTasks = JSON.parse(localStorage.getItem("tasks")) || [];
+    this.tasks = storageTasks.map(
+      (task) =>
+        new Task(
+          task.currentId,
+          task.name,
+          task.details,
+          task.assignee,
+          task.duedate,
+          task.status
+        )
+    );
+    this.currentId = localStorage.getItem("currentID") || 1;
+
+    const storageAssignees =
+      JSON.parse(localStorage.getItem("assigneeList")) || null;
+
+    if (storageAssignees) {
+      storageAssignees.list.forEach((assignee) =>
+        this.assigneeList.addAssignee(assignee)
+      );
+    } else {
+      this.assigneeList.addAssignee("Peter");
+      this.assigneeList.addAssignee("Catalina");
+    }
+  }
+
   addTask(name, details, assignee, duedate, status) {
     const task = new Task(
       this.currentId++,
@@ -17,6 +51,7 @@ class TaskManager {
     );
 
     this.tasks.push(task);
+    this.saveToStorage();
   }
 
   updateTask(id, name, details, assignee, duedate, status) {
@@ -31,14 +66,11 @@ class TaskManager {
     }
 
     this.refreshTaskTable();
+    this.saveToStorage();
   }
 
   getTask(id) {
-    for (let i = 0; i < this.tasks.length; i++) {
-      if (this.tasks[i].id == id) {
-        return this.tasks[i];
-      }
-    }
+    return this.tasks.find((task) => task.id == id);
   }
 
   buildTaskTable() {
@@ -92,6 +124,7 @@ class TaskManager {
         if (checkBoxList[i].checked == true) {
           let id = checkBoxList[i].getAttribute("data-id");
           this.deleteTask(id);
+          this.saveToStorage();
         }
       }
       this.refreshTaskTable();
@@ -112,6 +145,7 @@ class TaskManager {
         let assignee = document.querySelector("#addAssigneeInput").value;
 
         this.assigneeList.addAssignee(assignee);
+        this.saveToStorage();
       });
     });
 
@@ -136,6 +170,7 @@ class TaskManager {
           assigneeSubmitButton.setAttribute("data-dismiss", "");
         } else {
           this.assigneeList.deleteAssignee(assigneeInput.value);
+          this.saveToStorage();
         }
       });
     });
@@ -196,6 +231,7 @@ class TaskManager {
               taskDueDate.value,
               taskStatus.value
             );
+            this.saveToStorage();
           }
         });
 
@@ -206,12 +242,13 @@ class TaskManager {
 
   deleteTask(id) {
     this.tasks = this.tasks.filter((task) => task.id != id);
+    this.saveToStorage();
   }
 }
 
 class AssigneeList {
   constructor() {
-    this.list = ["Peter", "Catalina"];
+    this.list = [];
   }
 
   addAssignee(assignee) {
@@ -221,7 +258,7 @@ class AssigneeList {
   deleteAssignee(assignee) {
     // remove a name from the assignee list
 
-    // this.list = this.list.filter((assignee) => this.list[assignee] != assignee);
+    //this.list = this.list.filter((assignee) => this.list != assignee);
 
     for (let i = 0; i < this.list.length; i++) {
       if (this.list[i] == assignee) {
@@ -229,6 +266,7 @@ class AssigneeList {
       }
     }
   }
+
   getHtml(assignee) {
     let assigneeHtml = "";
 
@@ -327,6 +365,7 @@ class Task {
 
     // create the task name column
     let col2 = this.buildColumn();
+    col2.classList.add("truncate");
     col2.innerHTML = this.name;
     newTaskRow.appendChild(col2);
 
@@ -425,6 +464,7 @@ class Task {
     // create the task detail column
     let col8 = this.buildColumn();
     col8.setAttribute("colspan", "5");
+    col8.classList.add("truncate");
     col8.innerHTML = this.details;
     newTaskDetailRow.appendChild(col8);
 
@@ -695,20 +735,23 @@ class Modal {
 
 const taskManager = new TaskManager("personal-tasks");
 
-taskManager.addTask(
-  "Go to bank",
-  "Withdraw $500 and apply for new credit card",
-  "Peter",
-  "2020-08-10",
-  "Not started"
-);
+taskManager.loadFromStorage();
 
-taskManager.addTask(
-  "Go shopping",
-  "Buy fresh vegetables, fruit. Make sure to go before 8pm",
-  "Catalina",
-  "2020-08-03",
-  "Not started"
-);
+if (!localStorage.getItem("tasks")) {
+  taskManager.addTask(
+    "Sample Task 1",
+    "Withdraw $500 and apply for credit card",
+    "Catalina",
+    "2020-08-11",
+    "Not started"
+  );
+  taskManager.addTask(
+    "Sample Task 2",
+    "Go to Woolworths to buy groceries: vegetables, fruit, toilet paper",
+    "Peter",
+    "2020-08-12",
+    "Not started"
+  );
+}
 
 taskManager.buildTaskTable();

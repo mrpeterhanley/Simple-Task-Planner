@@ -10,7 +10,7 @@ footer {
   color: white;
 }
 
-td {
+.truncate {
   max-width: 100px;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -22,7 +22,7 @@ td {
 }
 
 .editButton {
-  cursor: alias;
+  cursor: pointer;
 }
 
 body {
