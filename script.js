@@ -130,9 +130,8 @@ class TaskManager {
             taskDueDate.value,
             taskStatus.value
           );
+          this.refreshTaskTable();
         }
-
-        this.refreshTaskTable();
       });
 
       this.modal.showTaskModal(e);
@@ -213,17 +212,49 @@ class TaskManager {
       });
     });
 
+    let filterReset = document.querySelector("#filter-reset");
+    filterReset.addEventListener("click", (e) => {
+      this.refreshTaskTable();
+    });
+
+    let filterNotStarted = document.querySelector("#filter-not-started");
+    filterNotStarted.addEventListener("click", (e) => {
+      this.refreshTaskTable("Not started");
+    });
+
+    let filterInProgress = document.querySelector("#filter-in-progress");
+    filterInProgress.addEventListener("click", (e) => {
+      this.refreshTaskTable("In progress");
+    });
+
+    let filterCompleted = document.querySelector("#filter-completed");
+    filterCompleted.addEventListener("click", (e) => {
+      this.refreshTaskTable("Completed");
+    });
+
+    let filterOverdue = document.querySelector("#filter-overdue");
+    filterOverdue.addEventListener("click", (e) => {
+      this.refreshTaskTable("Overdue");
+    });
+
     this.refreshTaskTable();
   }
 
-  refreshTaskTable() {
+  refreshTaskTable(filter) {
     let taskTableBody = document.querySelector("#taskTableBody");
 
     taskTableBody.innerHTML = "";
 
-    this.tasks.forEach((task) => {
-      task.buildTask(taskTableBody);
-    });
+    if (filter) {
+      let filteredTasks = this.tasks.filter((task) => task.status == filter);
+      filteredTasks.forEach((task) => {
+        task.buildTask(taskTableBody);
+      });
+    } else {
+      this.tasks.forEach((task) => {
+        task.buildTask(taskTableBody);
+      });
+    }
 
     const editButtons = document.querySelectorAll(".editButton");
 
