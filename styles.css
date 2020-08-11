@@ -35,3 +35,7 @@ body {
     rgba(252, 70, 107, 0.7287289915966386) 70%
   );
 }
+
+.alert {
+  text-align: center;
+}

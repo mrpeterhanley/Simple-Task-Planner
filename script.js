@@ -8,7 +8,6 @@ class TaskManager {
   }
 
   saveToStorage() {
-    console.log("Saving " + JSON.stringify(this.tasks));
     localStorage.setItem("tasks", JSON.stringify(this.tasks));
     localStorage.setItem("currentId", this.currentId);
     localStorage.setItem("assigneeList", JSON.stringify(this.assigneeList));
@@ -41,8 +40,9 @@ class TaskManager {
     } else {
       console.log("No storage exists. creating some sample tasks & assignees");
 
-      this.assigneeList.addAssignee("Peter");
-      this.assigneeList.addAssignee("Catalina");
+      this.modal.buildFirstTimeAlerts();
+
+      this.assigneeList.addAssignee("Sample Assignee");
 
       this.addTask(
         "Sample Task 1",
@@ -54,7 +54,7 @@ class TaskManager {
       taskManager.addTask(
         "Sample Task 2",
         "Go to Woolworths to buy groceries: vegetables, fruit, toilet paper",
-        this.assigneeList.list[1],
+        this.assigneeList.list[0],
         "2020-08-12",
         "Not started"
       );
@@ -157,18 +157,33 @@ class TaskManager {
 
     addAssigneeDropDown.addEventListener("click", (e) => {
       this.modal.buildAddAssigneeModal();
-
       this.modal.showAddAssigneeModal();
+
+      let assigneeInput = document.querySelector("#addAssigneeInput");
+      assigneeInput.classList.add("is-invalid");
+
+      assigneeInput.addEventListener("input", (e) => {
+        if (!assigneeInput.checkValidity()) {
+          assigneeInput.classList.remove("is-valid");
+          assigneeInput.classList.add("is-invalid");
+        } else {
+          assigneeInput.classList.remove("is-invalid");
+          assigneeInput.classList.add("is-valid");
+        }
+      });
 
       let assigneeSubmitButton = document.querySelector(
         "#add-assignee-submit-button"
       );
 
       assigneeSubmitButton.addEventListener("click", (e) => {
-        let assignee = document.querySelector("#addAssigneeInput").value;
-
-        this.assigneeList.addAssignee(assignee);
-        this.saveToStorage();
+        if (!assigneeInput.checkValidity()) {
+          assigneeSubmitButton.setAttribute("data-dismiss", "");
+        } else {
+          assigneeSubmitButton.setAttribute("data-dismiss", "modal");
+          this.assigneeList.addAssignee(assigneeInput.value);
+          this.saveToStorage();
+        }
       });
     });
 
@@ -506,6 +521,73 @@ class Modal {
     this.submitButton;
   }
 
+  buildFirstTimeAlerts() {
+    let alertHtml = `<div
+    class="alert alert-primary alert-dismissible fade show"
+    role="alert"
+  >
+    <p>
+      Welcome to your Simple Task Planner, designed to make planning
+      your daily life easier!
+    </p>
+    <button
+      type="button"
+      class="close"
+      data-dismiss="alert"
+      aria-label="Close"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div
+    class="alert alert-warning alert-dismissible fade show"
+    role="alert"
+  >
+    <p>
+      Please start by clicking "Assignee > Add Assignee" to add one or
+      more assignees to your planner.
+    </p>
+    <p>
+      Then add your first task by clicking the "Add Task" button.
+      Simple!
+    </p>
+    <button
+      type="button"
+      class="close"
+      data-dismiss="alert"
+      aria-label="Close"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div
+    class="alert alert-warning alert-dismissible fade show"
+    role="alert"
+  >
+    <p>
+      We've added a few sample tasks & assignees to show you how this
+      planner works. Please feel free to delete them when ready.
+    </p>
+    <button
+      type="button"
+      class="close"
+      data-dismiss="alert"
+      aria-label="Close"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>`;
+
+    let alertElement = document
+      .createRange()
+      .createContextualFragment(alertHtml);
+
+    let alertContainer = document.querySelector("#alert-container");
+
+    alertContainer.innerHTML = "";
+    alertContainer.appendChild(alertElement);
+  }
+
   buildAddAssigneeModal() {
     let modalHtml = `<div class="modal fade" id="${this.addAssigneeModalId}" tabindex="-1" role="dialog">
     <div class="modal-dialog">
@@ -529,10 +611,11 @@ class Modal {
                 type="text"
                 class="form-control"
                 id="addAssigneeInput"
-                value=""
+                minlength="1"
+                value="" required
               />
               <div class="valid-feedback">Looks good!</div>
-              <div class="invalid-feedback">Task name should be a minimum of 8 characters</div>
+              <div class="invalid-feedback">Assignee name should have a minimum of 1 character</div>
             </div>
           </form>
         </div>
@@ -631,7 +714,6 @@ class Modal {
     newTask = true
   ) {
     let taskStatus = new Status(status);
-    console.log("Selected Assignee " + selectedAssignee);
     let assigneeHtml = this.assigneeList.getHtml(selectedAssignee);
     let statusHtml = taskStatus.getHtml();
 
