@@ -4,7 +4,7 @@ class TaskManager {
     this.currentId = 1;
 
     this.assigneeList = new AssigneeList();
-    this.modal = new Modal(name, this.assigneeList);
+    this.formManager = new FormManager(name, this.assigneeList);
   }
 
   saveToStorage() {
@@ -15,8 +15,7 @@ class TaskManager {
 
   loadFromStorage() {
     if (localStorage.getItem("tasks")) {
-      console.log("Storage exists. Loading from storage");
-
+      // Local storage exists. Loading tasks & assignees from storage
       const storageTasks = JSON.parse(localStorage.getItem("tasks"));
       this.tasks = storageTasks.map(
         (task) =>
@@ -38,9 +37,8 @@ class TaskManager {
         this.assigneeList.addAssignee(assignee)
       );
     } else {
-      console.log("No storage exists. creating some sample tasks & assignees");
-
-      this.modal.buildFirstTimeAlerts();
+      //No local storage exists = new user. Create first time alerts and some sample tasks & assignee
+      this.formManager.buildFirstTimeAlerts();
 
       this.assigneeList.addAssignee("Sample Assignee");
 
@@ -100,7 +98,7 @@ class TaskManager {
     const addTaskButton = document.querySelector("#addTaskButton");
 
     addTaskButton.addEventListener("click", (e) => {
-      this.modal.buildTaskModal(
+      this.formManager.buildTaskModal(
         this.assigneeList.list[0],
         "Add Task",
         "Add Task"
@@ -134,7 +132,7 @@ class TaskManager {
         }
       });
 
-      this.modal.showTaskModal(e);
+      this.formManager.showTaskModal(e);
     });
 
     let deletebutton = document.querySelector("#deletebutton");
@@ -155,8 +153,8 @@ class TaskManager {
     let addAssigneeDropDown = document.querySelector("#addAssigneeDropDown");
 
     addAssigneeDropDown.addEventListener("click", (e) => {
-      this.modal.buildAddAssigneeModal();
-      this.modal.showAddAssigneeModal();
+      this.formManager.buildAddAssigneeModal();
+      this.formManager.showAddAssigneeModal();
 
       let assigneeInput = document.querySelector("#addAssigneeInput");
       assigneeInput.classList.add("is-invalid");
@@ -191,9 +189,9 @@ class TaskManager {
     );
 
     deleteAssigneeDropDown.addEventListener("click", (e) => {
-      this.modal.buildDeleteAssigneeModal();
+      this.formManager.buildDeleteAssigneeModal();
 
-      this.modal.showDeleteAssigneeModal();
+      this.formManager.showDeleteAssigneeModal();
 
       let assigneeSubmitButton = document.querySelector(
         "#delete-assignee-submit-button"
@@ -264,7 +262,7 @@ class TaskManager {
 
         let task = this.getTask(taskId);
 
-        this.modal.buildTaskModal(
+        this.formManager.buildTaskModal(
           task.assignee,
           "Edit Task",
           "Update Task",
@@ -304,7 +302,7 @@ class TaskManager {
           }
         });
 
-        this.modal.showTaskModal(e);
+        this.formManager.showTaskModal(e);
       });
     });
   }
@@ -326,8 +324,6 @@ class AssigneeList {
   }
   deleteAssignee(assignee) {
     // remove a name from the assignee list
-
-    //this.list = this.list.filter((assignee) => this.list != assignee);
 
     for (let i = 0; i < this.list.length; i++) {
       if (this.list[i] == assignee) {
@@ -543,7 +539,7 @@ class Task {
   }
 }
 
-class Modal {
+class FormManager {
   constructor(name, assigneeList) {
     this.taskModalId = `${name}-task-modal`;
     this.addAssigneeModalId = `${name}-add-assignee-modal`;
