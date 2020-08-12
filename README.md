@@ -1,1 +1,1 @@
-# task-list-project
+# Simple-Task-Planner
