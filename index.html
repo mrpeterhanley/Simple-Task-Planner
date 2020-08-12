@@ -3,7 +3,6 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
     <!-- Bootstrap CSS -->
     <link
       rel="stylesheet"
@@ -30,7 +29,7 @@
             <button type="button" id="addTaskButton" class="btn btn-success">
               Add Task
             </button>
-            <button type="button" class="btn btn-danger m-1" id="deletebutton">
+            <button type="button" id="deletebutton" class="btn btn-danger m-1">
               Delete Task
             </button>
           </div>
@@ -81,7 +80,6 @@
       </div>
       <div class="table-responsive">
         <table class="table">
-          <!--Heading row-->
           <thead class="bg-light">
             <tr>
               <th scope="col"></th>
@@ -92,8 +90,6 @@
               <th scope="col"></th>
             </tr>
           </thead>
-
-          <!--Table content-->
           <tbody class="accordion" id="taskTableBody"></tbody>
         </table>
       </div>

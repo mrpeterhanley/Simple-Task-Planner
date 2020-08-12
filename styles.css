@@ -1,3 +1,14 @@
+body {
+  display: flex;
+  flex-direction: column;
+  background: rgb(63, 94, 251);
+  background: linear-gradient(
+    90deg,
+    rgba(63, 94, 251, 0.7259278711484594) 0%,
+    rgba(252, 70, 107, 0.7287289915966386) 70%
+  );
+}
+
 h1 {
   font-weight: 600;
   font-size: 50px;
@@ -5,12 +16,14 @@ h1 {
 
 h1,
 footer {
-  text-align: center;
   margin: 30px;
   color: white;
 }
 
-.center {
+h1,
+footer,
+.center,
+.alert {
   text-align: center;
 }
 
@@ -27,19 +40,4 @@ footer {
 
 .editButton {
   cursor: pointer;
-}
-
-body {
-  display: flex;
-  flex-direction: column;
-  background: rgb(63, 94, 251);
-  background: linear-gradient(
-    90deg,
-    rgba(63, 94, 251, 0.7259278711484594) 0%,
-    rgba(252, 70, 107, 0.7287289915966386) 70%
-  );
-}
-
-.alert {
-  text-align: center;
 }
