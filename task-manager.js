@@ -55,7 +55,7 @@ export default class TaskManager {
         "2020-08-11",
         "Not started"
       );
-      taskManager.addTask(
+      this.addTask(
         "Sample Task 2",
         "Put more detailed information about your task here",
         this.assigneeList.list[0],
