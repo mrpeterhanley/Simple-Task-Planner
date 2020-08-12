@@ -1,0 +1,26 @@
+{
+  "name": "task-list-project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "script.js",
+  "scripts": {
+    "start": "parcel index.html",
+    "build": "parcel build index.html"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mrpeterhanley/task-list-project.git"
+  },
+  "author": "Peter Hanley",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mrpeterhanley/task-list-project/issues"
+  },
+  "homepage": "https://github.com/mrpeterhanley/task-list-project#readme",
+  "devDependencies": {
+    "parcel-bundler": "^1.12.4"
+  },
+  "browserslist": [
+    "last 1 chrome version"
+  ]
+}
