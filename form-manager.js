@@ -83,7 +83,9 @@ export default class FormManager {
       role="alert"
     >
       <p>
-        Attention! You currently have <strong>${overdueNum} tasks</strong> that are overdue.
+        Attention! You currently have <strong>${overdueNum} ${
+      overdueNum > 1 ? "tasks" : "task"
+    }</strong> that ${overdueNum > 1 ? "are" : "is"} overdue.
       </p>
       <button
         type="button"
