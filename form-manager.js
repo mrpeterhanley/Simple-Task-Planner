@@ -77,6 +77,34 @@ export default class FormManager {
     alertContainer.appendChild(alertElement);
   }
 
+  buildOverdueAlert(overdueNum) {
+    let alertHtml = `<div
+      class="alert alert-danger alert-dismissible fade show"
+      role="alert"
+    >
+      <p>
+        Attention! You currently have <strong>${overdueNum} tasks</strong> that are overdue.
+      </p>
+      <button
+        type="button"
+        class="close"
+        data-dismiss="alert"
+        aria-label="Close"
+      >
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>`;
+
+    let alertElement = document
+      .createRange()
+      .createContextualFragment(alertHtml);
+
+    let alertContainer = document.querySelector("#alert-container");
+
+    alertContainer.innerHTML = "";
+    alertContainer.appendChild(alertElement);
+  }
+
   buildAddAssigneeModal() {
     let modalHtml = `<div class="modal fade" id="${this.addAssigneeModalId}" tabindex="-1" role="dialog">
       <div class="modal-dialog">
