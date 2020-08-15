@@ -34,6 +34,12 @@ export default class TaskManager {
           )
       );
 
+      let overdueTasks = this.tasks.filter((task) => task.status == "Overdue");
+
+      if (overdueTasks.length > 0) {
+        this.formManager.buildOverdueAlert(overdueTasks.length);
+      }
+
       this.currentId = localStorage.getItem("currentId");
 
       const storageAssignees = JSON.parse(localStorage.getItem("assigneeList"));
@@ -259,6 +265,8 @@ export default class TaskManager {
         task.buildTask(taskTableBody);
       });
     }
+
+    this.saveToStorage();
 
     const editButtons = document.querySelectorAll(".editButton");
 
