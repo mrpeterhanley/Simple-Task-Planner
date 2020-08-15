@@ -266,6 +266,8 @@ export default class TaskManager {
       });
     }
 
+    this.saveToStorage();
+
     const editButtons = document.querySelectorAll(".editButton");
 
     editButtons.forEach((editButton) => {
