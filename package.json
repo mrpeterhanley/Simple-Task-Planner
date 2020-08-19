@@ -1,5 +1,5 @@
 {
-  "name": "Simple-Task-Planner",
+  "name": "simple-task-planner",
   "version": "1.0.0",
   "description": "A simple task planner application built with Bootstrap 4.5 & vanilla JavaScript. Uses Web Storage API (localStorage) for persistent storage of tasks, and built using a Jest testing suite",
   "main": "script.js",
