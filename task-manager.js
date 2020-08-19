@@ -11,66 +11,6 @@ export default class TaskManager {
     this.formManager = new FormManager(name, this.assigneeList);
   }
 
-  saveToStorage() {
-    localStorage.setItem("tasks", JSON.stringify(this.tasks));
-    localStorage.setItem("currentId", this.currentId);
-    localStorage.setItem("assigneeList", JSON.stringify(this.assigneeList));
-  }
-
-  loadFromStorage() {
-    if (localStorage.getItem("tasks")) {
-      // Local storage exists. Loading tasks & assignees from storage
-
-      const storageTasks = JSON.parse(localStorage.getItem("tasks"));
-      this.tasks = storageTasks.map(
-        (task) =>
-          new Task(
-            task.id,
-            task.name,
-            task.details,
-            task.assignee,
-            task.duedate,
-            task.status
-          )
-      );
-
-      let overdueTasks = this.tasks.filter((task) => task.status == "Overdue");
-
-      if (overdueTasks.length > 0) {
-        this.formManager.buildOverdueAlert(overdueTasks.length);
-      }
-
-      this.currentId = localStorage.getItem("currentId");
-
-      const storageAssignees = JSON.parse(localStorage.getItem("assigneeList"));
-
-      storageAssignees.list.forEach((assignee) =>
-        this.assigneeList.addAssignee(assignee)
-      );
-    } else {
-      //No local storage exists = new user. Create first time alerts and some sample tasks & assignee
-
-      this.formManager.buildFirstTimeAlerts();
-
-      this.assigneeList.addAssignee("Sample Assignee");
-
-      this.addTask(
-        "Sample Task 1",
-        "Put more detailed information about your task here",
-        this.assigneeList.list[0],
-        "2020-08-11",
-        "Not started"
-      );
-      this.addTask(
-        "Sample Task 2",
-        "Put more detailed information about your task here",
-        this.assigneeList.list[0],
-        "2020-09-12",
-        "Not started"
-      );
-    }
-  }
-
   addTask(name, details, assignee, duedate, status) {
     const task = new Task(
       this.currentId++,
@@ -82,26 +22,34 @@ export default class TaskManager {
     );
 
     this.tasks.push(task);
-    this.saveToStorage();
+    this.refreshTaskTable();
+    return task;
   }
 
-  updateTask(id, name, details, assignee, duedate, status) {
-    for (let i = 0; i < this.tasks.length; i++) {
-      if (this.tasks[i].id == id) {
-        this.tasks[i].name = name;
-        this.tasks[i].details = details;
-        this.tasks[i].assignee = assignee;
-        this.tasks[i].duedate = duedate;
-        this.tasks[i].status = status;
-      }
-    }
-
-    this.refreshTaskTable();
+  deleteTask(id) {
+    this.tasks = this.tasks.filter((task) => task.id != id);
     this.saveToStorage();
   }
 
   getTask(id) {
     return this.tasks.find((task) => task.id == id);
+  }
+
+  updateTask(id, name, details, assignee, duedate, status) {
+    let updatedTask;
+
+    this.tasks.forEach((task) => {
+      if (task.id == id) {
+        task.name = name;
+        task.details = details;
+        task.assignee = assignee;
+        task.duedate = duedate;
+        task.status = status;
+        updatedTask = task;
+      }
+    });
+    this.refreshTaskTable();
+    return updatedTask;
   }
 
   buildTaskTable() {
@@ -140,7 +88,6 @@ export default class TaskManager {
             taskDueDate.value,
             taskStatus.value
           );
-          this.refreshTaskTable();
         }
       });
 
@@ -156,7 +103,6 @@ export default class TaskManager {
         if (checkBoxList[i].checked == true) {
           let id = checkBoxList[i].getAttribute("data-id");
           this.deleteTask(id);
-          this.saveToStorage();
         }
       }
       this.refreshTaskTable();
@@ -321,8 +267,63 @@ export default class TaskManager {
     });
   }
 
-  deleteTask(id) {
-    this.tasks = this.tasks.filter((task) => task.id != id);
-    this.saveToStorage();
+  saveToStorage() {
+    localStorage.setItem("tasks", JSON.stringify(this.tasks));
+    localStorage.setItem("currentId", this.currentId);
+    localStorage.setItem("assigneeList", JSON.stringify(this.assigneeList));
+  }
+
+  loadFromStorage() {
+    if (localStorage.getItem("tasks")) {
+      // Local storage exists. Loading tasks & assignees from storage
+
+      const storageTasks = JSON.parse(localStorage.getItem("tasks"));
+      this.tasks = storageTasks.map(
+        (task) =>
+          new Task(
+            task.id,
+            task.name,
+            task.details,
+            task.assignee,
+            task.duedate,
+            task.status
+          )
+      );
+
+      let overdueTasks = this.tasks.filter((task) => task.status == "Overdue");
+
+      if (overdueTasks.length > 0) {
+        this.formManager.buildOverdueAlert(overdueTasks.length);
+      }
+
+      this.currentId = localStorage.getItem("currentId");
+
+      const storageAssignees = JSON.parse(localStorage.getItem("assigneeList"));
+
+      storageAssignees.list.forEach((assignee) =>
+        this.assigneeList.addAssignee(assignee)
+      );
+    } else {
+      //No local storage exists = new user. Create first time alerts and some sample tasks & assignee
+
+      this.formManager.buildFirstTimeAlerts();
+
+      this.assigneeList.addAssignee("Sample Assignee");
+
+      this.addTask(
+        "Sample Task 1",
+        "Put more detailed information about your task here",
+        this.assigneeList.list[0],
+        "2020-08-11",
+        "Not started"
+      );
+      this.addTask(
+        "Sample Task 2",
+        "Put more detailed information about your task here",
+        this.assigneeList.list[0],
+        "2020-09-12",
+        "Not started"
+      );
+    }
   }
 }
