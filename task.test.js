@@ -6,12 +6,9 @@ const html = fs.readFileSync(path.resolve(__dirname, "./index.html"), "utf8");
 /*
 TASK Class Testing Suite
 ~~~~~~~~~~~~~~~~~~~~~~~~
-Task Class has the following methods that need to be tested:
+The following methods are tested in Task Class:
 1. constructor(id, name, details, assignee, duedate, status)
 2. buildTask(parentElement)
-
-3  buildColumn(alignment)
-4. buildBadge(text, badgeClass = "badge-secondary") 
 */
 
 let taskTable;
@@ -60,4 +57,11 @@ test("A new task is appended correctly to the HTML webpage", () => {
   expect(taskTable.children.length).toBe(2);
   // expect 6 columns in the first row (task row)
   expect(taskTable.firstChild.children.length).toBe(6);
+
+  // expect the task table to contain all the information from the new task
+  expect(taskTable.innerHTML).toContain(task.name);
+  expect(taskTable.innerHTML).toContain(task.details);
+  expect(taskTable.innerHTML).toContain(task.assignee);
+  expect(taskTable.innerHTML).toContain(task.duedate);
+  expect(taskTable.innerHTML).toContain(task.status);
 });

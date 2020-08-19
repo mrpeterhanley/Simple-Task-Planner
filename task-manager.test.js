@@ -6,13 +6,12 @@ const html = fs.readFileSync(path.resolve(__dirname, "./index.html"), "utf8");
 /*
 TASK MANAGER Class Testing Suite
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Task Manager Class has the following methods that need to be tested:
+The following methods are tested in Task Manager Class:
 1. addTask(name, details, assignee, duedate, status)
 2. deleteTask(id)
 3. getTask(id)
 4. updateTask(id, name, details, assignee, duedate, status)
 5. refreshTaskTable(filter)
-
 6. saveToStorage()
 7. loadFromStorage()
 */
@@ -24,6 +23,7 @@ beforeEach(() => {
   taskManager = new TaskManager("myTaskManager");
   document.documentElement.innerHTML = html.toString();
   taskTable = document.querySelector("#taskTableBody");
+  localStorage.clear();
 });
 
 // 1. TEST addTask(name, details, assignee, duedate, status)
@@ -343,3 +343,144 @@ test("Only filtered tasks are correctly displayed on the index.html task table",
   expect(taskTable.innerHTML).toContain(task3.duedate);
   expect(taskTable.innerHTML).toContain(task3.status);
 });
+
+// 5. TEST saveToStorage()
+// ~~~~~~~~~~~~~~~~~~~~~~~
+test("A new task & assignee are saved to local storage correctly", () => {
+  // expect there to be no tasks, current ID or assignees in local storage
+  expect(localStorage.getItem("tasks")).toBeFalsy();
+  expect(localStorage.getItem("currentId")).toBeFalsy();
+  expect(localStorage.getItem("assigneeList")).toBeFalsy();
+
+  // add a sample task
+  let task1 = taskManager.addTask(
+    "Task name 11",
+    "Task details 11",
+    "Task assignee 11",
+    "2020-08-08",
+    "Completed"
+  );
+
+  // add a sample assignee
+  taskManager.assigneeList.addAssignee("Peter");
+
+  // save them to storage
+  taskManager.saveToStorage();
+
+  // check that tasks, currentId and assigneeList now exist in local storage
+  expect(localStorage.getItem("tasks")).toBeTruthy();
+  expect(localStorage.getItem("currentId")).toBeTruthy();
+  expect(localStorage.getItem("assigneeList")).toBeTruthy();
+
+  // check the values in local storage match the task and assignee that was added
+  expect(localStorage.getItem("tasks")).toContain(task1.name);
+  expect(localStorage.getItem("tasks")).toContain(task1.details);
+  expect(localStorage.getItem("tasks")).toContain(task1.assignee);
+  expect(localStorage.getItem("tasks")).toContain(task1.duedate);
+  expect(localStorage.getItem("tasks")).toContain(task1.status);
+  expect(localStorage.getItem("assigneeList")).toContain("Peter");
+
+  // the current ID now should be "2" since one task has already been added
+  expect(localStorage.getItem("currentId")).toBe("2");
+});
+
+// 5. TEST loadFromStorage()
+// ~~~~~~~~~~~~~~~~~~~~~~~
+test("Tasks & assignees are loaded from storage and displayed on the HTML page correctly", () => {
+  // expect there to be no tasks, current ID or assignees in local storage
+  expect(localStorage.getItem("tasks")).toBeFalsy();
+  expect(localStorage.getItem("currentId")).toBeFalsy();
+  expect(localStorage.getItem("assigneeList")).toBeFalsy();
+
+  // add some sample tasks
+  taskManager.addTask(
+    "Task name 11",
+    "Task details 11",
+    "Task assignee 11",
+    "2020-08-08",
+    "Completed"
+  );
+
+  taskManager.addTask(
+    "AAAAAAAAAA",
+    "AAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+    "Sample assignee",
+    "2020-12-12",
+    "In progress"
+  );
+
+  // add a sample assignee
+  taskManager.assigneeList.addAssignee("Peter");
+
+  // save them to storage
+  taskManager.saveToStorage();
+
+  // reset and check all tasks & assignees in memory have been cleared
+  taskManager.tasks = [];
+  taskManager.assigneeList.list = [];
+  taskManager.currentId = "1";
+  expect(taskManager.tasks.length).toBe(0);
+  expect(taskManager.assigneeList.list.length).toBe(0);
+
+  // load back from local storage
+  taskManager.loadFromStorage();
+
+  // check the new task & assignee have been loaded back into memory
+  expect(taskManager.tasks.length).toBe(2);
+  expect(taskManager.currentId).toBe("3");
+  expect(taskManager.assigneeList.list.length).toBe(1);
+});
+
+// loadFromStorage() {
+//   if (localStorage.getItem("tasks")) {
+//     // Local storage exists. Loading tasks & assignees from storage
+
+//     const storageTasks = JSON.parse(localStorage.getItem("tasks"));
+//     this.tasks = storageTasks.map(
+//       (task) =>
+//         new Task(
+//           task.id,
+//           task.name,
+//           task.details,
+//           task.assignee,
+//           task.duedate,
+//           task.status
+//         )
+//     );
+
+//     let overdueTasks = this.tasks.filter((task) => task.status == "Overdue");
+
+//     if (overdueTasks.length > 0) {
+//       this.formManager.buildOverdueAlert(overdueTasks.length);
+//     }
+
+//     this.currentId = localStorage.getItem("currentId");
+
+//     const storageAssignees = JSON.parse(localStorage.getItem("assigneeList"));
+
+//     storageAssignees.list.forEach((assignee) =>
+//       this.assigneeList.addAssignee(assignee)
+//     );
+//   } else {
+//     //No local storage exists = new user. Create first time alerts and some sample tasks & assignee
+
+//     this.formManager.buildFirstTimeAlerts();
+
+//     this.assigneeList.addAssignee("Sample Assignee");
+
+//     this.addTask(
+//       "Sample Task 1",
+//       "Put more detailed information about your task here",
+//       this.assigneeList.list[0],
+//       "2020-08-11",
+//       "Not started"
+//     );
+//     this.addTask(
+//       "Sample Task 2",
+//       "Put more detailed information about your task here",
+//       this.assigneeList.list[0],
+//       "2020-09-12",
+//       "Not started"
+//     );
+//   }
+// }
