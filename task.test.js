@@ -8,9 +8,10 @@ TASK Class Testing Suite
 ~~~~~~~~~~~~~~~~~~~~~~~~
 Task Class has the following methods that need to be tested:
 1. constructor(id, name, details, assignee, duedate, status)
-2. buildColumn(alignment)
-3. buildBadge(text, badgeClass = "badge-secondary")
-4. buildTask(parentElement)
+2. buildTask(parentElement)
+
+3  buildColumn(alignment)
+4. buildBadge(text, badgeClass = "badge-secondary") 
 */
 
 let taskTable;
@@ -40,7 +41,7 @@ test("A new task is created correctly", () => {
   expect(task.status).toBe("Overdue");
 });
 
-// 4. TEST buildTask(parentElement)
+// 2. TEST buildTask(parentElement)
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 test("A new task is appended correctly to the HTML webpage", () => {
   let task = new Task(

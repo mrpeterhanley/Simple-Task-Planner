@@ -22,13 +22,11 @@ export default class TaskManager {
     );
 
     this.tasks.push(task);
-    //this.refreshTaskTable();
     return task;
   }
 
   deleteTask(id) {
     this.tasks = this.tasks.filter((task) => task.id != id);
-    this.saveToStorage();
   }
 
   getTask(id) {
@@ -53,6 +51,10 @@ export default class TaskManager {
   }
 
   buildTaskTable() {
+    /* loads tasks from storage, adds event listeners to "add task","delete task","add / delete assignee", "filter tasks" buttons
+     builds modals when the "add task" or "add / delete assignee" buttons are clicked, 
+     and adds event listeners to the submit buttons inside these modals */
+
     this.loadFromStorage();
 
     const addTaskButton = document.querySelector("#addTaskButton");
@@ -106,6 +108,7 @@ export default class TaskManager {
           this.deleteTask(id);
         }
       }
+      this.saveToStorage();
       this.refreshTaskTable();
     });
 
@@ -198,6 +201,11 @@ export default class TaskManager {
   }
 
   refreshTaskTable(filter) {
+    /* builds the task list table on the HTML page from the task list array, 
+     with an optional status filter that will only displays tasks that match that filter
+     adds an event listener to each edit button for each task, and builds a modal when
+     that edit button is clicked, which gets its values from the current task displayed */
+
     let taskTableBody = document.querySelector("#taskTableBody");
 
     taskTableBody.innerHTML = "";

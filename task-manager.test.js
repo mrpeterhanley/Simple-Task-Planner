@@ -15,7 +15,6 @@ Task Manager Class has the following methods that need to be tested:
 
 6. saveToStorage()
 7. loadFromStorage()
-8. buildTaskTable()
 */
 
 let taskManager;
@@ -210,6 +209,7 @@ test("New tasks are correctly displayed on the index.html task table", () => {
 
   expect(taskManager.tasks.length).toBe(2);
 
+  // Task 2 has been added to the tasklist array but not yet added to the HTML page table. Check that it doesn't yet exist on the HTML page table
   expect(taskTable.innerHTML).not.toContain(task2.name);
   expect(taskTable.innerHTML).not.toContain(task2.details);
   expect(taskTable.innerHTML).not.toContain(task2.assignee);
@@ -220,6 +220,7 @@ test("New tasks are correctly displayed on the index.html task table", () => {
   // expect TWO more new children rows in the task table (task row & task detail row)
   expect(taskTable.children.length).toBe(4);
 
+  // Check that task 2 has now been added onto the HTML page table
   expect(taskTable.innerHTML).toContain(task2.name);
   expect(taskTable.innerHTML).toContain(task2.details);
   expect(taskTable.innerHTML).toContain(task2.assignee);
@@ -269,14 +270,14 @@ test("A deleted task is correctly removed from index.html task table", () => {
 
   expect(taskTable.children.length).toBe(2);
 
-  // Task 1 has been deleted. Expect it to no longer exist on the HTML page table
+  // Task 2 has been deleted. Expect it to no longer exist on the HTML page table
   expect(taskTable.innerHTML).not.toContain(task1.name);
   expect(taskTable.innerHTML).not.toContain(task1.details);
   expect(taskTable.innerHTML).not.toContain(task1.assignee);
   expect(taskTable.innerHTML).not.toContain(task1.duedate);
   expect(taskTable.innerHTML).not.toContain(task1.status);
 
-  // Expect Task 2 to still exist on the HTML page table
+  // Expect task 2 to still exist on the HTML page table
   expect(taskTable.innerHTML).toContain(task2.name);
   expect(taskTable.innerHTML).toContain(task2.details);
   expect(taskTable.innerHTML).toContain(task2.assignee);
