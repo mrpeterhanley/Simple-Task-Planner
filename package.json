@@ -1,7 +1,7 @@
 {
-  "name": "task-list-project",
+  "name": "Simple-Task-Planner",
   "version": "1.0.0",
-  "description": "",
+  "description": "A simple task planner application built with Bootstrap 4.5 & vanilla JavaScript. Uses Web Storage API (localStorage) for persistent storage of tasks, and built using a Jest testing suite",
   "main": "script.js",
   "scripts": {
     "start": "parcel index.html",
@@ -10,14 +10,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mrpeterhanley/task-list-project.git"
+    "url": "git+https://github.com/mrpeterhanley/simple-task-planner.git"
   },
-  "author": "Peter Hanley",
+  "author": "Peter Hanley, Catalina Gonzalez",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/mrpeterhanley/task-list-project/issues"
+    "url": "https://github.com/mrpeterhanley/simple-task-planner/issues"
   },
-  "homepage": "https://github.com/mrpeterhanley/task-list-project#readme",
+  "homepage": "https://github.com/mrpeterhanley/simple-task-planner#readme",
   "devDependencies": {
     "@babel/core": "^7.11.1",
     "@babel/preset-env": "^7.11.0",
