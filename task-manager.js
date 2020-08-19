@@ -22,7 +22,7 @@ export default class TaskManager {
     );
 
     this.tasks.push(task);
-    this.refreshTaskTable();
+    //this.refreshTaskTable();
     return task;
   }
 
@@ -88,6 +88,7 @@ export default class TaskManager {
             taskDueDate.value,
             taskStatus.value
           );
+          this.refreshTaskTable();
         }
       });
 
