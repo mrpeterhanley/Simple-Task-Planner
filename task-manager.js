@@ -48,7 +48,7 @@ export default class TaskManager {
         updatedTask = task;
       }
     });
-    this.refreshTaskTable();
+
     return updatedTask;
   }
 
@@ -259,6 +259,7 @@ export default class TaskManager {
               taskDueDate.value,
               taskStatus.value
             );
+            this.refreshTaskTable();
             this.saveToStorage();
           }
         });
