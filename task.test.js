@@ -17,13 +17,3 @@ test("object creation", () => {
   expect(task.duedate).toBe("2020-08-04");
   expect(task.status).toBe("In Progress");
 });
-
-// test("html string contains all attributes", () => {
-//   const htmlString = task.toHtmlString();
-//   expect(htmlString).toContain("task1");
-//   expect(htmlString).toContain("task Name");
-//   expect(htmlString).toContain("task Details");
-//   expect(htmlString).toContain("task Assignee");
-//   expect(htmlString).toContain("2020-08-20");
-//   expect(htmlString).toContain("In Progress");
-// });
