@@ -22,7 +22,6 @@ export default class TaskManager {
     );
 
     this.tasks.push(task);
-    //this.refreshTaskTable();
     return task;
   }
 
