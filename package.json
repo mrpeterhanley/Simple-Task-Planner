@@ -1,5 +1,5 @@
 {
-  "name": "simple-task-planner",
+  "name": "task-planner-pro",
   "version": "1.0.0",
   "description": "",
   "main": "script.js",
@@ -10,14 +10,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mrpeterhanley/simple-task-planner.git"
+    "url": "git+https://github.com/mrpeterhanley/task-planner-pro.git"
   },
   "author": "Peter Hanley, Catalina Gonzalez",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/mrpeterhanley/simple-task-planner/issues"
+    "url": "https://github.com/mrpeterhanley/task-planner-pro/issues"
   },
-  "homepage": "https://github.com/mrpeterhanley/simple-task-planner#readme",
+  "homepage": "https://github.com/mrpeterhanley/task-planner-pro#readme",
   "devDependencies": {
     "@babel/core": "^7.11.4",
     "@babel/preset-env": "^7.11.0",

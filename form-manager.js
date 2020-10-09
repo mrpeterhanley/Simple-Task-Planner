@@ -16,7 +16,7 @@ export default class FormManager {
       role="alert"
     >
       <p>
-        Welcome to your Simple Task Planner, designed to make planning
+        Welcome to your Task Planner Pro, designed to make planning
         your daily life easier!
       </p>
       <button
